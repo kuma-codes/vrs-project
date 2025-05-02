@@ -175,7 +175,7 @@ public class Booking
 
         backBtn.addActionListener(e -> {
             frm.dispose();
-            new userLandingPageUI();
+            new UserLandingPageUI();
         });
 
         pnl.add(backBtn);

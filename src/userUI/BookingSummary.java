@@ -78,7 +78,7 @@ public class BookingSummary{
             new ViewBookingStatus().passSummary(name,brand,model,color,startDate,endDate,dailyRate, status);
             ViewBookingStatus.show = true;
             frm.dispose();
-            new userLandingPageUI();
+            new UserLandingPageUI();
         });
 
         backBtn.addActionListener(e -> {

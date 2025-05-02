@@ -11,15 +11,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
-import userUI.userLandingPageUI;
+import userUI.UserLandingPageUI;
 
-public class logInUI extends JFrame {
+public class LogInUI extends JFrame {
     
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
     private static final Color LBLUE = new Color(30,144,255);
     private static final Color DBLUE = new Color(71,112,139);
 
-    public logInUI(){
+    public LogInUI(){
         setTitle("Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 540);
@@ -102,7 +102,7 @@ public class logInUI extends JFrame {
             }
             else if(eField.getText().equals("test_user1") && pField.getText().equals("12345")){
                 dispose();
-                new userLandingPageUI();
+                new UserLandingPageUI();
             }
             else if(!eField.getText().equals("") && !pField.getText().equals("")){
                 JOptionPane.showMessageDialog(null, "Incorrect username or password");
@@ -114,7 +114,7 @@ public class logInUI extends JFrame {
 
         signUpBtn.addActionListener(e1 -> {
             dispose();
-            new registerUI();
+            new RegisterUI();
         });
 
         pan.add(pageName);
@@ -126,7 +126,7 @@ public class logInUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        new logInUI();
+        new LogInUI();
     }
 }
 

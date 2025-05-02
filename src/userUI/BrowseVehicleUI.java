@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class browseVehicleUI extends JFrame {
+public class BrowseVehicleUI extends JFrame {
     
     //fonts and colors used that has rgb values
         private static final Font F1 = new Font("Arial", Font.BOLD, 19);
@@ -42,7 +42,7 @@ public class browseVehicleUI extends JFrame {
         "Motorcycle - Yamaha - Red", "Car - Suzuki - Orange", "Car - Toyota - Brown"
         };
     
-    browseVehicleUI(){
+    BrowseVehicleUI(){
         setTitle("Vehicle Rental System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 530);
@@ -197,12 +197,12 @@ public class browseVehicleUI extends JFrame {
     
     private void returnToLandingPage(){
     dispose();
-    new userLandingPageUI();
+    new UserLandingPageUI();
     }
     
     private void goToVehicleDetails(String t, String c, String b){
     dispose();
-    new vehicleDetailsUI(t,c,b);
+    new VehicleDetailsUI(t,c,b);
     }
     
     // Loads data into the list
@@ -239,6 +239,6 @@ public class browseVehicleUI extends JFrame {
 
 class runner1{
     public static void main(String[] args) {
-        new browseVehicleUI();
+        new BrowseVehicleUI();
     }
 }

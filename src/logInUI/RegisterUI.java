@@ -15,13 +15,13 @@ import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 
 
-public class registerUI extends JFrame {
+public class RegisterUI extends JFrame {
     private static final Font F1 = new Font("Arial", Font.BOLD, 19);
     private static final Font F2 = new Font("Arial", Font.BOLD, 16);
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
     private static final Color LBLUE = new Color(30,144,255);
 
-    public registerUI(){
+    public RegisterUI(){
         setTitle("Register");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 740);
@@ -153,7 +153,7 @@ public class registerUI extends JFrame {
                     if(ans == JOptionPane.YES_OPTION){
                         JOptionPane.showMessageDialog(null, "Account Created Successfully!");
                         dispose();
-                        new logInUI();
+                        new LogInUI();
                     }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Phone number must contain only digits.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -163,7 +163,7 @@ public class registerUI extends JFrame {
 
         logInBtn.addActionListener(e -> {
             dispose();
-            new logInUI();
+            new LogInUI();
         });
         
         pan.add(pageName);
@@ -175,6 +175,6 @@ public class registerUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        new registerUI();
+        new RegisterUI();
     }
 }

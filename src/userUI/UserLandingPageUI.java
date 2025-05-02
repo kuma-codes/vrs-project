@@ -1,6 +1,6 @@
 package userUI;
 
-import logInUI.logInUI;
+import logInUI.LogInUI;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class userLandingPageUI extends JFrame {
+public class UserLandingPageUI extends JFrame {
     
 //fonts and colors used that has rgb values
     private static final Font F1 = new Font("Arial", Font.BOLD, 35);
@@ -26,7 +26,7 @@ public class userLandingPageUI extends JFrame {
 
 
     
-    public userLandingPageUI(){
+    public UserLandingPageUI(){
         setTitle("Vehicle Rental System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 640);
@@ -126,7 +126,7 @@ public class userLandingPageUI extends JFrame {
 
     private void goToViewVehicle(){
         dispose();
-        new browseVehicleUI();
+        new BrowseVehicleUI();
     }
     private void goToRentVehicle(){
         dispose();
@@ -139,12 +139,12 @@ public class userLandingPageUI extends JFrame {
     private void logOut(){
         dispose();
         System.out.println("Logged Out Succesfully");
-        new logInUI();
+        new LogInUI();
     }
 }
 
 class runner{
     public static void main(String[] args) {
-        new userLandingPageUI();
+        new UserLandingPageUI();
     }
 }

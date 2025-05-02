@@ -1,12 +1,12 @@
 package runner;
 
-import logInUI.logInUI;
+import logInUI.LogInUI;
 
 
 public class main {
     public static void main(String[] args) {
         
-        new logInUI();
+        new LogInUI();
         
     }
 }

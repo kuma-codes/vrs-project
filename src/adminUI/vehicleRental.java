@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
-import logInUI.logInUI;
+import logInUI.LogInUI;
 
 public class vehicleRental extends JFrame {
 
@@ -60,7 +60,7 @@ public class vehicleRental extends JFrame {
         bookingBtn.addActionListener(e -> {dispose(); new manageBookings();});
         vehicleBtn.addActionListener(e -> {dispose(); new vehicleManagement();});
         userBtn.addActionListener(e -> {dispose(); new userManagement();});
-        logoutBtn.addActionListener(e -> {dispose(); new logInUI();});
+        logoutBtn.addActionListener(e -> {dispose(); new LogInUI();});
 
         pan.add(title);
         pan.add(bookingBtn);

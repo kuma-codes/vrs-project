@@ -12,8 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
-public class payment {
-    public payment() { 
+public class Payment {
+    public Payment() { 
         JFrame frm = new JFrame("Vehicle Rental System"); // frame
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 560);
@@ -33,7 +33,7 @@ public class payment {
         line2.setBackground(new Color(100, 149, 237));
         line2.setBounds(150, 0, 30, 640);
 
-        JLabel payment = new JLabel("PAYMENT", SwingConstants.CENTER); // label for payment title
+        JLabel payment = new JLabel("PAYMENT", SwingConstants.CENTER); // label for Payment title
         payment.setForeground(new Color (39, 58, 87));
         payment.setFont(new Font ("Arial", Font.BOLD, 40));
         payment.setBounds(0, 60, 900, 30);
@@ -47,7 +47,7 @@ public class payment {
         JTextField field3 = new JTextField(); // third
         field3.setBounds(100, 300, 660, 30);
 
-        String[] mode = { "CASH", "CARD" }; // jlist for mode of payment
+        String[] mode = { "CASH", "CARD" }; // jlist for mode of Payment
         JList<String> sfield1 = new JList<>(mode);
         JScrollPane payy = new JScrollPane(sfield1);
         payy.setBackground(new Color(217, 217, 217));
@@ -128,6 +128,6 @@ public class payment {
     }
 
     public static void main(String[] args) {
-        new payment(); 
+        new Payment(); 
     }
 }

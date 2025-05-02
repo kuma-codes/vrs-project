@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class vehicleDetailsUI extends JFrame {
+public class VehicleDetailsUI extends JFrame {
     
     // Fonts and colors used
     private static final Font F1 = new Font("Arial", Font.BOLD, 14);
@@ -21,7 +21,7 @@ public class vehicleDetailsUI extends JFrame {
     private static final Color DBLUE = new Color(71, 112, 139);
     private String type, color, brand;
 
-    vehicleDetailsUI(String type, String color, String brand) {
+    VehicleDetailsUI(String type, String color, String brand) {
         this.type = type;
         this.color = color;
         this.brand = brand;
@@ -151,7 +151,7 @@ public class vehicleDetailsUI extends JFrame {
 
     private void returnToBrowseVehicle() {
         dispose();
-        new browseVehicleUI();
+        new BrowseVehicleUI();
     }
 
     // Main method to open the frame
@@ -162,6 +162,6 @@ public class vehicleDetailsUI extends JFrame {
         String vehicleBrand = "Toyota";
 
         // Create and display the vehicle details UI with the sample data
-        new vehicleDetailsUI(vehicleType, vehicleColor, vehicleBrand);
+        new VehicleDetailsUI(vehicleType, vehicleColor, vehicleBrand);
     }
 }

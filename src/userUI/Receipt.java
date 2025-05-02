@@ -9,8 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class receipt {
-    public receipt() {
+public class Receipt {
+    public Receipt() {
 
         JFrame frm = new JFrame("Vehicle Rental System");      // FRAME
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,6 +147,6 @@ public class receipt {
     }
 
     public static void main(String[] args) {
-        new receipt();
+        new Receipt();
     }
 }

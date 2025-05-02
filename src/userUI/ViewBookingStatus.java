@@ -98,7 +98,7 @@ public class ViewBookingStatus extends JFrame{
                         , "Cancellation", JOptionPane.INFORMATION_MESSAGE);
                 show = false;
                 frm.dispose();
-                new userLandingPageUI();
+                new UserLandingPageUI();
                 }
                 else if(status != "Pending Approval"){
                 JOptionPane.showMessageDialog(frm,"Cannot Cancel Approved Booking"
@@ -132,7 +132,7 @@ public class ViewBookingStatus extends JFrame{
 
         backBtn.addActionListener(e -> {
         frm.dispose();
-        new userLandingPageUI();
+        new UserLandingPageUI();
         });
         
         pnl.add(backBtn);
