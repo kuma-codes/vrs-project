@@ -2,10 +2,11 @@ package userUI;
 
 import javax.swing.*;
 import java.awt.*;
+import com.github.lgooddatepicker.components.DatePicker;
 
 public class BookingDate {
     JFrame frm;
-    JTextField startDateFld, endDateFld;
+    DatePicker startDateFld, endDateFld;
     static int totalDays; // New: store the number of days
     static String status;
 
@@ -43,18 +44,22 @@ public class BookingDate {
         bookingDateLbl.setFont(new Font ("Arial", Font.BOLD, 40));
         bookingDateLbl.setBounds(0, 60, 900, 50);
 
-        JLabel startDateLbl = new JLabel("Rental Start Date (YYYY-MM-DD):");
+        JLabel startDateLbl = new JLabel("Rental Start Date:");
         startDateLbl.setFont(new Font("Arial", Font.BOLD, 15));
         startDateLbl.setForeground(new Color (39, 58, 87));
         startDateLbl.setBounds(100, 130, 300, 35);
-        startDateFld = new JTextField();
+        startDateFld = new DatePicker();
+        startDateFld.getComponentDateTextField().setEditable(false); 
+        startDateFld.getComponentToggleCalendarButton().setText("Select");
         startDateFld.setBounds(100, 160, 650, 40);
 
-        JLabel endDateLbl = new JLabel("Rental End Date (YYYY-MM-DD):");
+        JLabel endDateLbl = new JLabel("Rental End Date:");
         endDateLbl.setFont(new Font("Arial", Font.BOLD, 15));
         endDateLbl.setForeground(new Color (39, 58, 87));
         endDateLbl.setBounds(100, 200, 300, 35);
-        endDateFld = new JTextField();
+        endDateFld = new DatePicker();
+        endDateFld.getComponentDateTextField().setEditable(false);
+        endDateFld.getComponentToggleCalendarButton().setText("Select");
         endDateFld.setBounds(100, 230, 650, 40);
 
         JButton doneBtn = new JButton("DONE");
@@ -64,8 +69,8 @@ public class BookingDate {
         doneBtn.addActionListener(e -> {
             try {
                 
-                String startDateStr = startDateFld.getText();
-                String endDateStr = endDateFld.getText();
+                String startDateStr = startDateFld.getDate().toString();
+                String endDateStr = endDateFld.getDate().toString();
 
                 if (startDateStr.isEmpty() || endDateStr.isEmpty()) {
                     JOptionPane.showMessageDialog(frm, "Please enter both dates!");
@@ -98,6 +103,7 @@ public class BookingDate {
                 totalDays = endDays - startDays + 1; // +1 to include start day
                 JOptionPane.showMessageDialog(frm, "Booking Succesfully created, please wait for approval of your booking.");
                 frm.dispose();
+                
                 BookingSummary.showSummary(
                     Booking.name,
                     Booking.brand,
@@ -111,7 +117,7 @@ public class BookingDate {
                 
             } 
             catch (Exception ex) {
-                JOptionPane.showMessageDialog(frm, "Invalid date format! Please use yyyy-MM-dd.");
+                JOptionPane.showMessageDialog(frm, "Dates cannot be empty, please select date");
             }
         });
         

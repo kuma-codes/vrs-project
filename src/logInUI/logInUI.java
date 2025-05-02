@@ -1,9 +1,7 @@
 package logInUI;
-import userUI.userLandingPageUI;
+
 import adminUI.vehicleRental;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,8 +14,7 @@ import javax.swing.JOptionPane;
 import userUI.userLandingPageUI;
 
 public class logInUI extends JFrame {
-    private static final Font F1 = new Font("Arial", Font.BOLD, 19);
-    private static final Font F2 = new Font("Arial", Font.BOLD, 16);
+    
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
     private static final Color LBLUE = new Color(30,144,255);
     private static final Color DBLUE = new Color(71,112,139);
@@ -36,11 +33,11 @@ public class logInUI extends JFrame {
         pan.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(new Color(100, 149, 237)); 
+        line1.setBackground(DBLUE); 
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(new Color(100, 149, 237)); 
+        line2.setBackground(DBLUE); 
         line2.setBounds(150, 0, 30, 640);
 
         JLabel pageName = new JLabel("LOGIN", SwingConstants.CENTER);
@@ -60,7 +57,7 @@ public class logInUI extends JFrame {
         eLabel.setBounds(100, 50, 300, 35);
 
         JTextField eField = new JTextField();
-        eField.setFont(new Font("Arial", Font.BOLD, 10));
+        eField.setFont(F3);
         eField.setBounds(100, 80, 600, 40);
 
         JLabel pLabel = new JLabel("Password");

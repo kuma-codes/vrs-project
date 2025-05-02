@@ -17,10 +17,8 @@ import java.awt.Color;
 
 public class vehicleManagement extends JFrame {
 
-    private static final Font fontA = new Font("Arial", Font.BOLD, 18);
-    private static final Font fontB = new Font("Arial", Font.BOLD, 14);
-    private static final Color lblue = new Color(135, 206, 235);
-    private static final Color dblue = new Color(100, 149, 237);
+
+    private static final Color DBLUE = new Color(100, 149, 237);
 
     private JPanel mainPnl;
     private JPanel addPnl, modifyPnl, removePnl, maintenancePnl;
@@ -39,11 +37,11 @@ public class vehicleManagement extends JFrame {
         mainPnl.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(dblue);
+        line1.setBackground(DBLUE);
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(dblue);
+        line2.setBackground(DBLUE);
         line2.setBounds(150, 0, 30, 640);
 
         JLabel title = new JLabel("VEHICLE MANAGEMENT", SwingConstants.CENTER);
@@ -113,11 +111,11 @@ public class vehicleManagement extends JFrame {
         panel.add(titlelbl);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(dblue);
+        line1.setBackground(DBLUE);
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(dblue);
+        line2.setBackground(DBLUE);
         line2.setBounds(150, 0, 30, 640);
 
         // Add Vehicle Panel
@@ -376,6 +374,7 @@ public class vehicleManagement extends JFrame {
             DatePickerSettings start = new DatePickerSettings();
             DatePicker pickStart = new DatePicker(start);
             pickStart.setBounds(480, 350, 280, 30);
+            pickStart.getComponentDateTextField().setEditable(false);
             panel.add(pickStart);
 
             JLabel endDate = new JLabel("Maintenance End Date:");
@@ -384,6 +383,7 @@ public class vehicleManagement extends JFrame {
 
             DatePickerSettings end = new DatePickerSettings();
             DatePicker pickEnd = new DatePicker(end);
+            pickEnd.getComponentDateTextField().setEditable(false);            
             pickEnd.setBounds(480, 410, 280, 30);
             panel.add(pickEnd);
 

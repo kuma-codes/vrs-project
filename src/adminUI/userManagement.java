@@ -15,10 +15,8 @@ import java.awt.Color;
 
 public class userManagement extends JFrame {
 
-    private static final Font fontA = new Font("Arial", Font.BOLD, 18);
-    private static final Font fontB = new Font("Arial", Font.BOLD, 14);
-    private static final Color lblue = new Color(135, 206, 235);
-    private static final Color dblue = new Color(100, 149, 237);
+
+    private static final Color DBLUE = new Color(100, 149, 237);
 
     private JPanel mainPnl;
     private JPanel viewUsersPnl, addUserPnl, removeUserPnl;
@@ -37,11 +35,11 @@ public class userManagement extends JFrame {
         mainPnl.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(dblue);
+        line1.setBackground(DBLUE);
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(dblue);
+        line2.setBackground(DBLUE);
         line2.setBounds(150, 0, 30, 640);
 
         JLabel title = new JLabel("USER MANAGEMENT", SwingConstants.CENTER);
@@ -93,11 +91,11 @@ public class userManagement extends JFrame {
         panel.add(titlelbl);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(dblue);
+        line1.setBackground(DBLUE);
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(dblue);
+        line2.setBackground(DBLUE);
         line2.setBounds(150, 0, 30, 640);
 
         // View Users Panel
