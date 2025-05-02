@@ -16,8 +16,6 @@ public class userLandingPageUI extends JFrame {
     private static final Font F1 = new Font("Arial", Font.BOLD, 35);
     private static final Font F2 = new Font("Arial", Font.BOLD, 20);
     private static final Font F3 = new Font("Arial", Font.BOLD, 14);
-    private static final Color LBLUE = new Color(30,144,255);
-    private static final Color DBLUE = new Color(71,112,139);
     
 //placeholder for sample datas
     private String name = "test_user1";
@@ -50,7 +48,6 @@ public class userLandingPageUI extends JFrame {
         line2.setBounds(150, 0, 30, 640);
         
         
-        
         JLabel pageName = new JLabel("HOME PAGE - " + name);
         pageName.setForeground(new Color (39, 58, 87));
         pageName.setFont(F2);
@@ -72,8 +69,6 @@ public class userLandingPageUI extends JFrame {
         l3.setBounds(90, 200, 360, 30);
         
         JButton logOutBtn = new JButton("Log Out");
-//        logOutBtn.setBackground(DBLUE);
-//        logOutBtn.setForeground(Color.WHITE);
         logOutBtn.setBounds(730,550,85, 25);
 
         JPanel selection = new JPanel(new GridLayout(5,0,30,15));

@@ -89,7 +89,7 @@ public class CardInfo {
             } else {
                 JOptionPane.showMessageDialog(frm, "Payment Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 frm.dispose();
-                new receipt(); 
+                new Receipt(); 
             }
         });
         
