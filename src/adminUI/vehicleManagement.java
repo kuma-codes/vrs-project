@@ -6,9 +6,12 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import java.awt.Font;
 import java.awt.Color;
 
@@ -100,7 +103,7 @@ public class vehicleManagement extends JFrame {
         
         JPanel panel = new JPanel();
         panel.setBackground(new Color(196, 227, 244));
-        panel.setBounds(0, 0, 900, 540);
+        panel.setBounds(0, 0, 900, 640);
         panel.setLayout(null);
 
         JLabel titlelbl = new JLabel(title.toUpperCase(), SwingConstants.CENTER);
@@ -137,7 +140,7 @@ public class vehicleManagement extends JFrame {
             brandFld.setBounds(100, 230, 280, 30);
             panel.add(brandFld);
 
-            JLabel model = new JLabel("Model(Year:");
+            JLabel model = new JLabel("Model(Year):");
             model.setBounds(100, 270, 200, 20);
             panel.add(model);
 
@@ -149,11 +152,10 @@ public class vehicleManagement extends JFrame {
             color.setBounds(100, 330, 200, 20);
             panel.add(color);
             
-            
             JTextField colorFld = new JTextField();
             colorFld.setBounds(100, 350, 280, 30);
             panel.add(colorFld);
-//
+            
             JLabel license = new JLabel("License Plate:");
             license.setBounds(480, 210, 200, 20);
             panel.add(license);
@@ -175,7 +177,7 @@ public class vehicleManagement extends JFrame {
             status.setBounds(480, 330, 200, 20);
             panel.add(status);
             
-            String[] statuses = {"Available", "Rented", "Under Maintenance"};
+            String[] statuses = {"Available", "Under Maintenance"};
             JComboBox <String> statusBox = new JComboBox<>(statuses);
             statusBox.setBounds(480, 350, 280, 30);
             panel.add(statusBox);
@@ -193,7 +195,7 @@ public class vehicleManagement extends JFrame {
 
         else if (title.equals("Modify Vehicle")) {
 
-              JLabel vehicleType = new JLabel("Vehicle Type:");
+            JLabel vehicleType = new JLabel("Vehicle Type:");
             vehicleType.setBounds(140, 130, 200, 20);
             panel.add(vehicleType);
             
@@ -210,7 +212,7 @@ public class vehicleManagement extends JFrame {
             brandFld.setBounds(100, 230, 280, 30);
             panel.add(brandFld);
 
-            JLabel model = new JLabel("Model(Year:");
+            JLabel model = new JLabel("Model(Year):");
             model.setBounds(100, 270, 200, 20);
             panel.add(model);
 
@@ -222,11 +224,10 @@ public class vehicleManagement extends JFrame {
             color.setBounds(100, 330, 200, 20);
             panel.add(color);
             
-            
             JTextField colorFld = new JTextField();
             colorFld.setBounds(100, 350, 280, 30);
             panel.add(colorFld);
-//
+
             JLabel license = new JLabel("License Plate:");
             license.setBounds(480, 210, 200, 20);
             panel.add(license);
@@ -253,33 +254,51 @@ public class vehicleManagement extends JFrame {
             statusBox.setBounds(480, 350, 280, 30);
             panel.add(statusBox);
 
-            JButton apply = new JButton("ADD");
-            apply.setBounds(300, 430, 100, 40);
-            panel.add(apply);
+            JButton update = new JButton("UPDATE");
+            update.setBounds(300, 430, 100, 40);
+            panel.add(update);
 
             JButton back = new JButton("BACK");
             back.setBounds(420, 430, 100, 40);
             panel.add(back);
-
-
 
             back.addActionListener(e -> switchPnl(mainPnl));
         }
 
         // Remove Vehicle Panel
         else if (title.equals("Remove Vehicle")) {
-    
-            JLabel availVehicle = new JLabel("Available Vehicles: ");
-            availVehicle.setBounds(60, 140, 230, 20);
-            availVehicle.setFont(new Font ("Arial", Font.BOLD, 20));
-            panel.add(availVehicle);
+            
+            JLabel search = new JLabel("Search:");
+            search.setBounds(70, 140, 60, 25);
+            panel.add(search);
+
+            JTextField searchFld = new JTextField();
+            searchFld.setBounds(130, 140, 200, 25);
+            panel.add(searchFld);
+
+            JLabel vehicleType = new JLabel("Type:");
+            vehicleType.setBounds(350, 140, 40, 25);
+            panel.add(vehicleType);
+
+            JComboBox <String> vehicleTypeBox = new JComboBox<>(new String[]{"All", "Car", "Motorcycle", "SUV"});
+            vehicleTypeBox.setBounds(390, 140, 150, 25);
+            panel.add(vehicleTypeBox);
+
+            JButton searchBtn = new JButton("Search");
+            searchBtn.setBounds(550, 140, 100, 25);
+            panel.add(searchBtn);
+
+            JButton resetBtn = new JButton("Reset");
+            resetBtn.setBounds(660, 140, 100, 25);
+            panel.add(resetBtn);
     
             String[] attributes = {"Vehicle ID", "Vehicle Type", "Status"};
             Object[][] data = {{"VR001", "SUV", "Available"},
                                {"VR002", "Car", "Available"},
                                {"VR003", "Motorcycle", "Available"}};
             
-            JTable vehicleTab = new JTable(data, attributes);
+            DefaultTableModel vehicleModel = new DefaultTableModel(attributes, 0);
+            JTable vehicleTab = new JTable(vehicleModel);
             vehicleTab.setRowHeight(25);
             vehicleTab.setEnabled(false);
     
@@ -302,7 +321,20 @@ public class vehicleManagement extends JFrame {
             JButton back = new JButton("BACK");
             back.setBounds(720, 480, 100, 40);
             panel.add(back);
-    
+            
+            removeVehicleFltr(data, vehicleModel, " ", "All");
+
+            searchBtn.addActionListener(e -> {
+                String keyword = searchFld.getText().toLowerCase();
+                String type = vehicleTypeBox.getSelectedItem().toString();
+                removeVehicleFltr(data, vehicleModel, keyword, type);
+            });
+
+            resetBtn.addActionListener(e -> {
+                searchFld.setText(" ");
+                vehicleTypeBox.setSelectedIndex(0);
+                removeVehicleFltr(data, vehicleModel, " ", "All");
+            });
     
             back.addActionListener(e -> switchPnl(mainPnl));
     }
@@ -341,19 +373,19 @@ public class vehicleManagement extends JFrame {
             startDate.setBounds(480, 330, 280, 20);
             panel.add(startDate);
 
-            JTextField startFld = new JTextField("MM-DD-YYYY");
-            startFld.setForeground(Color.LIGHT_GRAY);
-            startFld.setBounds(480, 350, 280, 30);
-            panel.add(startFld);
+            DatePickerSettings start = new DatePickerSettings();
+            DatePicker pickStart = new DatePicker(start);
+            pickStart.setBounds(480, 350, 280, 30);
+            panel.add(pickStart);
 
             JLabel endDate = new JLabel("Maintenance End Date:");
             endDate.setBounds(480, 390, 280, 20);
             panel.add(endDate);
 
-            JTextField endFld = new JTextField("MM-DD-YYYY");
-            endFld.setForeground(Color.LIGHT_GRAY);
-            endFld.setBounds(480, 410, 280, 30);
-            panel.add(endFld);
+            DatePickerSettings end = new DatePickerSettings();
+            DatePicker pickEnd = new DatePicker(end);
+            pickEnd.setBounds(480, 410, 280, 30);
+            panel.add(pickEnd);
 
             JLabel description = new JLabel("Description:");
             description.setBounds(100, 390, 280, 20);
@@ -379,6 +411,23 @@ public class vehicleManagement extends JFrame {
         panel.add(line2);
         return panel;
     }
+    
+    private void removeVehicleFltr(Object[][] data, DefaultTableModel vModel, String keyword, String vType) {
+        vModel.setRowCount(0);
+        
+    for (Object[] row : data) {
+        String id = row[0].toString().toLowerCase();
+        String vehicleType = row[1].toString();
+        String status = row[2].toString();
+
+        boolean match = id.contains(keyword) || vehicleType.toLowerCase().contains(keyword) || status.toLowerCase().contains(keyword);
+        boolean matchType = vType.equals("All") || vehicleType.equals(vType);
+
+        if (match && matchType) {
+            vModel.addRow(row);
+        }
+    }
+}
 
     private void switchPnl(JPanel newPnl) {
         getContentPane().removeAll(); 
