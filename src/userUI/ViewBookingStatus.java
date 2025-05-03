@@ -5,21 +5,9 @@ import java.awt.*;
 
 public class ViewBookingStatus extends JFrame{
     
-    private static String name,brand,model,color,startDate,endDate,status;
     public static boolean show = false;
-    private static double dailyRate;
+
     
-    public void passSummary(String n, String b, String m, String c, 
-                                   String start, String end, double daily, String status){
-    this.name = n;
-    this.brand = b;
-    this.model = m;
-    this.color = c;
-    this.startDate = start;
-    this.endDate = end;
-    this.dailyRate = daily;
-    this.status = status;  
-    };
     
     public void showViewBookingStatus() 
     {
@@ -63,26 +51,26 @@ public class ViewBookingStatus extends JFrame{
             panel1.setLayout(null);
 
             // Booking Summary
-            JLabel nameLbl = new JLabel("Customer Name: " + name);
+            JLabel nameLbl = new JLabel("Customer Name: " + UserLandingPageUI.getUserName());
             nameLbl.setBounds(20, 20, 260, 25);
-            JLabel brandLbl = new JLabel("Car Brand: " + brand);
+            JLabel brandLbl = new JLabel("Car Brand: " + UserLandingPageUI.getBrand());
             brandLbl.setBounds(20, 50, 260, 25);
-            JLabel modelLbl = new JLabel("Car Model: " + model);
+            JLabel modelLbl = new JLabel("Car Model: " + UserLandingPageUI.getModel());
             modelLbl.setBounds(20, 80, 260, 25);
-            JLabel colorLbl = new JLabel("Car Color: " + color);
+            JLabel colorLbl = new JLabel("Car Color: " + UserLandingPageUI.getColor());
             colorLbl.setBounds(20, 110, 260, 25);
-            JLabel startDateLbl = new JLabel("Rental Start Date: " + startDate);
+            JLabel startDateLbl = new JLabel("Rental Start Date: " + UserLandingPageUI.getStartDate());
             startDateLbl.setBounds(20, 140, 260, 25);
-            JLabel endDateLbl = new JLabel("Rental End Date: " + endDate);
+            JLabel endDateLbl = new JLabel("Rental End Date: " + UserLandingPageUI.getEndDate());
             endDateLbl.setBounds(20, 170, 260, 25);
-            JLabel dailyRateLbl = new JLabel("Daily Rate: $" + dailyRate);
+            JLabel dailyRateLbl = new JLabel("Daily Rate: $" + UserLandingPageUI.getDailyRate());
             dailyRateLbl.setBounds(20, 200, 260, 25);
-            JLabel daysLbl = new JLabel("Total Rental Time: " + BookingDate.totalDays + " Days");
+            JLabel daysLbl = new JLabel("Total Rental Time: " + UserLandingPageUI.getTotalDays() + " Days");
             daysLbl.setBounds(20, 230, 260, 25);
-            double totalPrice = BookingDate.totalDays * dailyRate;
+            double totalPrice = UserLandingPageUI.getTotalDays() * UserLandingPageUI.getDailyRate();
             JLabel priceLbl = new JLabel("Total Payment: $" + totalPrice);
             priceLbl.setBounds(20, 260, 260, 25);
-            JLabel statusLbl = new JLabel("Status: " + status);
+            JLabel statusLbl = new JLabel("Status: " + UserLandingPageUI.getStatus());
             statusLbl.setBounds(20, 290, 260, 25);
 
             // Cancel Button
@@ -93,17 +81,18 @@ public class ViewBookingStatus extends JFrame{
 
             cancelBookingBtn.addActionListener(e -> {
                 int ans = JOptionPane.showConfirmDialog(frm,"Are you sure you want to cancel?" , "Cancellation", JOptionPane.YES_NO_OPTION);
-                if(ans == JOptionPane.YES_OPTION && status == "Pending Approval"){
+                if(ans == JOptionPane.YES_OPTION && UserLandingPageUI.getStatus() == "Pending Approval"){
                 JOptionPane.showMessageDialog(frm,"Booking Succesfully Cancelled."
                         , "Cancellation", JOptionPane.INFORMATION_MESSAGE);
+                UserLandingPageUI.setStatus("Not Renting");
                 show = false;
                 frm.dispose();
                 new UserLandingPageUI();
                 }
-                else if(status != "Pending Approval"){
-                JOptionPane.showMessageDialog(frm,"Cannot Cancel Approved Booking"
-                        , "Cancellation", JOptionPane.WARNING_MESSAGE);
-                }
+                    else if(UserLandingPageUI.getStatus() != "Pending Approval"){
+                    JOptionPane.showMessageDialog(frm,"Cannot Cancel Approved Booking"
+                            , "Cancellation", JOptionPane.WARNING_MESSAGE);
+                    }
 
             });
 
@@ -145,7 +134,6 @@ public class ViewBookingStatus extends JFrame{
      public static void main(String[] args) {
     ViewBookingStatus vbs = new ViewBookingStatus();
     vbs.show = true; 
-    vbs.passSummary("John Doe", "Toyota", "Vios", "Red", "2025-05-01", "2025-05-05", 50.0, "Pending Approval");
     vbs.showViewBookingStatus();
 }
 }

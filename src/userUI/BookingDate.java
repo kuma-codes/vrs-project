@@ -7,8 +7,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 public class BookingDate {
     JFrame frm;
     DatePicker startDateFld, endDateFld;
-    static int totalDays; // New: store the number of days
-    static String status;
+
 
     public BookingDate() 
     {
@@ -71,6 +70,8 @@ public class BookingDate {
                 
                 String startDateStr = startDateFld.getDate().toString();
                 String endDateStr = endDateFld.getDate().toString();
+                UserLandingPageUI.setStartDate(startDateStr);
+                UserLandingPageUI.setEndDate(endDateStr);
 
                 if (startDateStr.isEmpty() || endDateStr.isEmpty()) {
                     JOptionPane.showMessageDialog(frm, "Please enter both dates!");
@@ -100,19 +101,20 @@ public class BookingDate {
                     return;
                 }
 
-                totalDays = endDays - startDays + 1; // +1 to include start day
+                UserLandingPageUI.setTotalDays(endDays - startDays + 1); // +1 to include start day
+                UserLandingPageUI.setStatus("Pending Approval");
                 JOptionPane.showMessageDialog(frm, "Booking Succesfully created, please wait for approval of your booking.");
                 frm.dispose();
                 
                 BookingSummary.showSummary(
-                    Booking.name,
-                    Booking.brand,
-                    Booking.model,
-                    Booking.color,
+                    UserLandingPageUI.getUserName(),
+                    UserLandingPageUI.getBrand(),
+                    UserLandingPageUI.getModel(),
+                    UserLandingPageUI.getColor(),
                     startDateStr,
                     endDateStr,
-                    Booking.dailyRate,
-                    status = "Pending Approval"
+                    UserLandingPageUI.getDailyRate(),
+                    UserLandingPageUI.getStatus()
                 );
                 
             } 

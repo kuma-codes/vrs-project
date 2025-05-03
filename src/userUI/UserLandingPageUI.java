@@ -18,12 +18,20 @@ public class UserLandingPageUI extends JFrame {
     private static final Font F3 = new Font("Arial", Font.BOLD, 14);
     
 //placeholder for sample datas
-    private String name = "test_user1";
+    private static String name1 = "test_user1";
     private String creationDate = "Account Created: 01-01-2001";
     private String accType = "Account Type: User";
-
-//components that 
-
+    
+// Private variables 
+    private static String name = name1;
+    private static String brand;
+    private static String model;
+    private static String color;
+    private static String startDate;
+    private static String endDate;
+    private static double dailyRate;
+    private static int totalDays;
+    private static String status = "Not Renting";
 
     
     public UserLandingPageUI(){
@@ -109,6 +117,7 @@ public class UserLandingPageUI extends JFrame {
         viewVehicleBtn.addActionListener(e -> goToViewVehicle());
         rentVehicleBtn.addActionListener(e -> goToRentVehicle());
         rentStatusBtn.addActionListener(e -> goToViewBookingStatus());
+        returnVehicleBtn.addActionListener(e -> goToReturnVehicle());
         logOutBtn.addActionListener(e -> logOut());
         
         pan.add(menuLabel);
@@ -132,6 +141,10 @@ public class UserLandingPageUI extends JFrame {
         dispose();
         new Booking();
     }
+    private void goToReturnVehicle(){
+        dispose();
+        new ReturnVehicle();
+    }
     private void goToViewBookingStatus(){
         dispose();
         new ViewBookingStatus().showViewBookingStatus();
@@ -141,7 +154,83 @@ public class UserLandingPageUI extends JFrame {
         System.out.println("Logged Out Succesfully");
         new LogInUI();
     }
+    
+    //setter and getter methods for the private variable
+    
+    public static String getUserName() {
+        return name;
+    }
+
+    public static String getBrand() {
+        return brand;
+    }
+
+    public static void setBrand(String brand) {
+        UserLandingPageUI.brand = brand;
+    }
+
+    public static String getModel() {
+        return model;
+    }
+
+    public static void setModel(String model) {
+        UserLandingPageUI.model = model;
+    }
+
+    public static String getColor() {
+        return color;
+    }
+
+    public static void setColor(String color) {
+        UserLandingPageUI.color = color;
+    }
+
+    public static String getStartDate() {
+        return startDate;
+    }
+
+    public static void setStartDate(String startDate) {
+        UserLandingPageUI.startDate = startDate;
+    }
+
+    public static String getEndDate() {
+        return endDate;
+    }
+
+    public static void setEndDate(String endDate) {
+        UserLandingPageUI.endDate = endDate;
+    }
+
+    public static double getDailyRate() {
+        return dailyRate;
+    }
+
+    public static void setDailyRate(double dailyRate) {
+        UserLandingPageUI.dailyRate = dailyRate;
+    }
+
+    public static int getTotalDays() {
+        return totalDays;
+    }
+
+    public static void setTotalDays(int totalDays) {
+        UserLandingPageUI.totalDays = totalDays;
+    }
+
+    public static String getStatus() {
+        return status;
+    }
+
+    public static void setStatus(String status) {
+        UserLandingPageUI.status = status;
+    }
+
+    
+    
+    
+    
 }
+
 
 class runner{
     public static void main(String[] args) {

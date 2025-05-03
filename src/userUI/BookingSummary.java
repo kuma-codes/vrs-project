@@ -59,9 +59,9 @@ public class BookingSummary{
         endDateLbl.setBounds(20, 170, 260, 25);
         JLabel dailyRateLbl = new JLabel("Daily Rate: $" + dailyRate);
         dailyRateLbl.setBounds(20, 200, 260, 25);
-        JLabel daysLbl = new JLabel("Total Rental Time: " + BookingDate.totalDays + " Days");
+        JLabel daysLbl = new JLabel("Total Rental Time: " + UserLandingPageUI.getTotalDays() + " Days");
         daysLbl.setBounds(20, 230, 260, 25);
-        double totalPrice = BookingDate.totalDays * dailyRate;
+        double totalPrice = UserLandingPageUI.getTotalDays() * dailyRate;
         JLabel priceLbl = new JLabel("Total Payment: $" + totalPrice);
         priceLbl.setBounds(20, 260, 260, 25);
         JLabel statusLbl = new JLabel("Status: " + status);
@@ -75,7 +75,6 @@ public class BookingSummary{
         
         confirmBtn.addActionListener(e -> {
             JOptionPane.showMessageDialog(frm, "Booking Confirmed! Thank you.");
-            new ViewBookingStatus().passSummary(name,brand,model,color,startDate,endDate,dailyRate, status);
             ViewBookingStatus.show = true;
             frm.dispose();
             new UserLandingPageUI();
