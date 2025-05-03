@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.sql.*;
 
 public class VehicleDetailsUI extends JFrame {
     
@@ -19,13 +20,16 @@ public class VehicleDetailsUI extends JFrame {
     private static final Font F3 = new Font("Arial", Font.BOLD, 20);
     private static final Color LBLUE = new Color(30, 144, 255);
     private static final Color DBLUE = new Color(71, 112, 139);
-    private String type, color, brand;
-
-    VehicleDetailsUI(String type, String color, String brand) {
-        this.type = type;
-        this.color = color;
-        this.brand = brand;
-
+    private String id;
+    
+    //JDBC Connection attributes
+    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=testDB;encrypt=true;trustServerCertificate=true";
+    private static final String DB_USER = "admin";
+    private static final String DB_PASS = "admin456";
+    
+    VehicleDetailsUI(String id) {
+        this.id = id;
+        
         setTitle("Vehicle Rental System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 640);
@@ -60,7 +64,7 @@ public class VehicleDetailsUI extends JFrame {
         l1.setForeground(new Color (39, 58, 87));
         l1.setPreferredSize(new Dimension(265, 30));
 
-        JTextField vType = new JTextField(type);
+        JTextField vType = new JTextField();
         vType.setFont(F1);
         vType.setEditable(false);
         vType.setPreferredSize(new Dimension(265, 30));
@@ -70,7 +74,7 @@ public class VehicleDetailsUI extends JFrame {
         l2.setForeground(new Color (39, 58, 87));
         l2.setPreferredSize(new Dimension(265, 30));
 
-        JTextField vBrand = new JTextField(brand);
+        JTextField vBrand = new JTextField();
         vBrand.setFont(F1);
         vBrand.setEditable(false);
         vBrand.setPreferredSize(new Dimension(265, 30));
@@ -80,7 +84,7 @@ public class VehicleDetailsUI extends JFrame {
         l3.setForeground(new Color (39, 58, 87));
         l3.setPreferredSize(new Dimension(265, 30));
 
-        JTextField vModel = new JTextField("Model will be populated from DB");
+        JTextField vModel = new JTextField();
         vModel.setFont(F1);
         vModel.setEditable(false);
         vModel.setPreferredSize(new Dimension(265, 30));
@@ -90,7 +94,7 @@ public class VehicleDetailsUI extends JFrame {
         l4.setForeground(new Color (39, 58, 87));
         l4.setPreferredSize(new Dimension(265, 30));
 
-        JTextField vColor = new JTextField(color);
+        JTextField vColor = new JTextField();
         vColor.setFont(F1);
         vColor.setEditable(false);
         vColor.setPreferredSize(new Dimension(265, 30));
@@ -100,7 +104,7 @@ public class VehicleDetailsUI extends JFrame {
         l5.setForeground(new Color (39, 58, 87));
         l5.setPreferredSize(new Dimension(265, 30));
 
-        JTextField vLPlate = new JTextField("License Plate will be populated from DB");
+        JTextField vLPlate = new JTextField();
         vLPlate.setFont(F1);
         vLPlate.setEditable(false);
         vLPlate.setPreferredSize(new Dimension(265, 30));
@@ -110,11 +114,54 @@ public class VehicleDetailsUI extends JFrame {
         l6.setForeground(new Color (39, 58, 87));
         l6.setPreferredSize(new Dimension(265, 30));
 
-        JTextField vRPrice = new JTextField("Price will be populated from DB");
+        JTextField vRPrice = new JTextField();
         vRPrice.setFont(F1);
         vRPrice.setEditable(false);
         vRPrice.setPreferredSize(new Dimension(265, 30));
 
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+            String sql = "SELECT * FROM Vehicles WHERE vehicleID = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, id);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String type = rs.getString("vehicleType");
+                String brand = rs.getString("brand");
+                String model = rs.getString("model");
+                String color = rs.getString("color");
+                String licensePlate = rs.getString("licensePlate");
+                double rentPrice = rs.getDouble("rentPrice");
+                
+                vType.setText(type);
+                vBrand.setText(brand);
+                vModel.setText(model);
+                vColor.setText(color);
+                vLPlate.setText(licensePlate);
+                vRPrice.setText(String.format("%.2f", rentPrice));
+            } else {
+                vType.setText("No record found");
+                vBrand.setText("No record found");
+                vModel.setText("No record found");
+                vColor.setText("No record found");
+                vLPlate.setText("No record found");
+                vRPrice.setText("No record found");
+            }
+
+            rs.close();
+            pstmt.close();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            vType.setText("DB Error");
+            vBrand.setText("DB Error");
+            vModel.setText("DB Error");
+            vColor.setText("DB Error");
+            vLPlate.setText("DB Error");
+            vRPrice.setText("DB Error");
+        }
+        
         JLabel spacer = new JLabel();
         spacer.setPreferredSize(new Dimension(265, 30));
 
@@ -139,6 +186,7 @@ public class VehicleDetailsUI extends JFrame {
 
         // Action Listeners
         backBtn.addActionListener(e -> returnToBrowseVehicle());
+        
 
         pan.add(title);
         pan.add(detailPanel);
@@ -156,12 +204,7 @@ public class VehicleDetailsUI extends JFrame {
 
     // Main method to open the frame
     public static void main(String[] args) {
-        // Sample data for the vehicle
-        String vehicleType = "SUV";
-        String vehicleColor = "Red";
-        String vehicleBrand = "Toyota";
 
-        // Create and display the vehicle details UI with the sample data
-        new VehicleDetailsUI(vehicleType, vehicleColor, vehicleBrand);
+        new VehicleDetailsUI("V1111");
     }
 }
