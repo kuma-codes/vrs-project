@@ -1,5 +1,6 @@
 package userUI;
 
+import java.text.CharacterIterator;
 import logInUI.LogInUI;
 import java.awt.Color;
 import java.awt.Font;
