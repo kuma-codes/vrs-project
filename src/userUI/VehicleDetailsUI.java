@@ -20,15 +20,17 @@ public class VehicleDetailsUI extends JFrame {
     private static final Font F3 = new Font("Arial", Font.BOLD, 20);
     private static final Color LBLUE = new Color(30, 144, 255);
     private static final Color DBLUE = new Color(71, 112, 139);
-    private String id;
+    private String vID, accID;
     
     //JDBC Connection attributes
-    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=testDB;encrypt=true;trustServerCertificate=true";
+    private Connection conn;
+    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
     private static final String DB_USER = "admin";
     private static final String DB_PASS = "admin456";
     
-    VehicleDetailsUI(String id) {
-        this.id = id;
+    VehicleDetailsUI(String vID, String AId) {
+        this.vID = vID;
+        this.accID = AId;
         
         setTitle("Vehicle Rental System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -119,20 +121,21 @@ public class VehicleDetailsUI extends JFrame {
         vRPrice.setEditable(false);
         vRPrice.setPreferredSize(new Dimension(265, 30));
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
-            String sql = "SELECT * FROM Vehicles WHERE vehicleID = ?";
+        try {
+            connectToDB();
+            String sql = "SELECT * FROM VEHICLES WHERE VehicleID = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, id);
+            pstmt.setString(1, vID);
 
             ResultSet rs = pstmt.executeQuery();
-
+            
             if (rs.next()) {
-                String type = rs.getString("vehicleType");
-                String brand = rs.getString("brand");
-                String model = rs.getString("model");
-                String color = rs.getString("color");
-                String licensePlate = rs.getString("licensePlate");
-                double rentPrice = rs.getDouble("rentPrice");
+                String type = rs.getString("VType");
+                String brand = rs.getString("Brand");
+                String model = rs.getString("Model");
+                String color = rs.getString("Color");
+                String licensePlate = rs.getString("LicensePlate");
+                double rentPrice = rs.getDouble("RentPrice");
                 
                 vType.setText(type);
                 vBrand.setText(brand);
@@ -148,9 +151,7 @@ public class VehicleDetailsUI extends JFrame {
                 vLPlate.setText("No record found");
                 vRPrice.setText("No record found");
             }
-
-            rs.close();
-            pstmt.close();
+            closeConnection();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -199,12 +200,26 @@ public class VehicleDetailsUI extends JFrame {
 
     private void returnToBrowseVehicle() {
         dispose();
-        new BrowseVehicleUI();
+        new BrowseVehicleUI(accID);
     }
+    private void connectToDB(){
+        try {
+        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
 
-    // Main method to open the frame
-    public static void main(String[] args) {
+     private void closeConnection(){
+        try
+        {
+        conn.close();
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
 
-        new VehicleDetailsUI("V1111");
-    }
+
 }

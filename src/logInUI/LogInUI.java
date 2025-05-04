@@ -12,12 +12,19 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 import userUI.UserLandingPageUI;
+import java.sql.*;
 
 public class LogInUI extends JFrame {
     
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
     private static final Color LBLUE = new Color(30,144,255);
     private static final Color DBLUE = new Color(71,112,139);
+    
+    // JDBC setup
+    private Connection conn;
+    private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
+    private final String DB_USER = "admin";
+    private final String DB_PASS = "admin456";
 
     public LogInUI(){
         setTitle("Login");
@@ -96,20 +103,39 @@ public class LogInUI extends JFrame {
         logInPanel.add(signUpBtn);
 
         logInBtn.addActionListener(e -> {
-            if(eField.getText().equals("admin") && pField.getText().equals("123")){
-                dispose();
-                new vehicleRental();
+            try{
+                connectToDB();
+                String loginQuery = "SELECT AccountID, Email, AccountPassword, AccountRole FROM ACCOUNT WHERE Email = ? ";
+                PreparedStatement p = conn.prepareStatement(loginQuery);
+                p.setString(1, eField.getText().trim());
+                
+                ResultSet rs = p.executeQuery();
+                
+                if(rs.next()){
+                    if(!rs.getString("AccountPassword").equals(pField.getText())){
+                    JOptionPane.showMessageDialog(null, "Incorrect Password");
+                    }
+                        else{
+                            if(rs.getString("AccountRole").equals("Admin")){
+                            dispose();
+                            new vehicleRental();
+                            closeConnection();
+                            }
+                                else{
+                                dispose();
+                                new UserLandingPageUI(rs.getString("AccountID"));
+                                closeConnection();
+                                }
+                        }
+                }
+                    else{
+                    JOptionPane.showMessageDialog(null, "Email not found");
+                    }
             }
-            else if(eField.getText().equals("test_user1") && pField.getText().equals("12345")){
-                dispose();
-                new UserLandingPageUI();
+            catch(SQLException e1){
+                JOptionPane.showMessageDialog(null, e1.getMessage());
             }
-            else if(!eField.getText().equals("") && !pField.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Incorrect username or password");
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Fields cannot be empty");
-            }
+            
         });
 
         signUpBtn.addActionListener(e1 -> {
@@ -123,7 +149,26 @@ public class LogInUI extends JFrame {
         pan.add(line2);
         add(pan);
         setVisible(true);
+        
     }
+    private void connectToDB(){
+        try {
+        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
+
+     private void closeConnection(){
+        try
+        {
+        conn.close();
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
 
     public static void main(String[] args) {
         new LogInUI();

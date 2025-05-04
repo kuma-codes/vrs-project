@@ -33,12 +33,15 @@ public class BrowseVehicleUI extends JFrame {
     private JComboBox<String> colorBox;
 
     // JDBC setup
-    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=testDB;encrypt=true;trustServerCertificate=true";
-    private static final String DB_USER = "admin";
-    private static final String DB_PASS = "admin456";
+    private Connection conn;
+    private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
+    private final String DB_USER = "admin";
+    private final String DB_PASS = "admin456";
+    private String accID;
     private ArrayList<String> vehicleData = new ArrayList<>();
 
-    BrowseVehicleUI(){
+    BrowseVehicleUI(String AId){
+        this.accID = AId;
         setTitle("Vehicle Rental System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 530);
@@ -71,13 +74,16 @@ public class BrowseVehicleUI extends JFrame {
         searchField.setFont(F3);
         searchField.setPreferredSize(new Dimension(195,25));
 
+        //Eto ung nagiinitialize ng connection sa database
+        connectToDB();
+        
         JLabel tLabel = new JLabel("Type:");
         tLabel.setPreferredSize(new Dimension(50,20));
         tLabel.setFont(F3);
         tLabel.setForeground(new Color (39, 58, 87));
         typeBox = new JComboBox<>();
         typeBox.addItem("All");
-        for (String type : fetchDistinctColumnValues("vehicleType")) {
+        for (String type : fetchDistinctColumnValues("VType")) {
             typeBox.addItem(type);
         }
         typeBox.setPreferredSize(new Dimension(195,25));
@@ -89,7 +95,7 @@ public class BrowseVehicleUI extends JFrame {
         cLabel.setForeground(new Color (39, 58, 87));
         colorBox = new JComboBox<>();
         colorBox.addItem("All");
-        for (String color : fetchDistinctColumnValues("color")) {
+        for (String color : fetchDistinctColumnValues("Color")) {
         colorBox.addItem(color);
         }
         colorBox.setPreferredSize(new Dimension(195,25));
@@ -143,7 +149,7 @@ public class BrowseVehicleUI extends JFrame {
             try {
                 String item = itemList.getSelectedValue();
                 String[] parts = item.split(" - ");
-                goToVehicleDetails(parts[0]);
+                goToVehicleDetails(parts[0], AId);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "No Vehicle Selected");
             }
@@ -159,18 +165,21 @@ public class BrowseVehicleUI extends JFrame {
         pan.add(line1);
         pan.add(line2);
 
+        //eto ung nagcclose ng DB
+ 
+        
         add(pan);
         setVisible(true);
     }
 
     private void returnToLandingPage() {
         dispose();
-        new UserLandingPageUI();
+        new UserLandingPageUI(accID);
     }
 
-    private void goToVehicleDetails(String id) {
+    private void goToVehicleDetails(String vID,String AId ) {
         dispose();
-        new VehicleDetailsUI(id);
+        new VehicleDetailsUI(vID,AId);
     }
 
     private void loadList(String[] items) {
@@ -196,11 +205,30 @@ public class BrowseVehicleUI extends JFrame {
             }
         }
     }
+    
+    private void connectToDB(){
+        try {
+        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+    }
+    
+    private void closeConnection(){
+        try
+        {
+        conn.close();
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+    }
+    
     private ArrayList<String> fetchDistinctColumnValues(String columnName) {
         ArrayList<String> values = new ArrayList<>();
-        String query = "SELECT DISTINCT " + columnName + " FROM Vehicles ORDER BY " + columnName;
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement stmt = conn.prepareStatement(query);
+        String query = "SELECT DISTINCT " + columnName + " FROM VEHICLES ORDER BY " + columnName;
+        try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 String val = rs.getString(columnName);
@@ -216,27 +244,21 @@ public class BrowseVehicleUI extends JFrame {
     
     private void loadVehicleDataFromDB() {
         vehicleData.clear();
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
-            String query = "SELECT vehicleID,vehicleType, brand, model, color FROM Vehicles WHERE vehicleStatus = 'Available'";
+        try {
+            String query = "SELECT VehicleID,VType, Brand, Model, Color FROM VEHICLES WHERE VehicleStatus = 'Available'";
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                String id = rs.getString("vehicleID");
-                String type = rs.getString("vehicleType");
-                String brand = rs.getString("brand");
-                String model = rs.getString("model");
-                String color = rs.getString("color");
+                String id = rs.getString("VehicleID");
+                String type = rs.getString("VType");
+                String brand = rs.getString("Brand");
+                String model = rs.getString("Model");
+                String color = rs.getString("Color");
                 String display = id + " - " + type + " - " + brand + " " + model + " - " + color;
                 vehicleData.add(display);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Database Error: " + e.getMessage());
         }
-    }
-}
-
-class runner1 {
-    public static void main(String[] args) {
-        new BrowseVehicleUI();
     }
 }

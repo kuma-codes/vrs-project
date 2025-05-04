@@ -9,7 +9,7 @@ public class BookingDate {
     DatePicker startDateFld, endDateFld;
 
 
-    public BookingDate() 
+    public BookingDate(String AId, String vID) 
     {
         frm = new JFrame("Booking Date");
         frm.setSize(900, 440);
@@ -126,7 +126,7 @@ public class BookingDate {
         // Back Button
         backBtn.addActionListener(e -> {
             frm.dispose();
-            new Booking();
+            new Booking(AId);
         });
 
         pnl.add(backBtn);
@@ -142,7 +142,5 @@ public class BookingDate {
         frm.add(pnl);
         frm.setVisible(true);
     }
-    public static void main(String[] args) {
-        new BookingDate();
-    }
+
 }

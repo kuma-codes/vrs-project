@@ -77,12 +77,12 @@ public class BookingSummary{
             JOptionPane.showMessageDialog(frm, "Booking Confirmed! Thank you.");
             ViewBookingStatus.show = true;
             frm.dispose();
-            new UserLandingPageUI();
+//            new UserLandingPageUI();
         });
 
         backBtn.addActionListener(e -> {
             frm.dispose();
-            new BookingDate();
+//            new BookingDate();
         });
 
         panel1.add(nameLbl);

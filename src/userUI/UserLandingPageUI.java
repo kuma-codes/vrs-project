@@ -1,6 +1,5 @@
 package userUI;
 
-import java.text.CharacterIterator;
 import logInUI.LogInUI;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,21 +9,24 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.sql.*;
 
 public class UserLandingPageUI extends JFrame {
-    
-//fonts and colors used that has rgb values
+
+    //fonts and colors used that has rgb values
     private static final Font F1 = new Font("Arial", Font.BOLD, 35);
     private static final Font F2 = new Font("Arial", Font.BOLD, 20);
     private static final Font F3 = new Font("Arial", Font.BOLD, 14);
     
-//placeholder for sample datas
-    private static String name1 = "test_user1";
-    private String creationDate = "Account Created: 01-01-2001";
-    private String accType = "Account Type: User";
+    // JDBC setup
+    private Connection conn;
+    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
+    private static final String DB_USER = "admin";
+    private static final String DB_PASS = "admin456";
+    private String accID;
     
-// Private variables 
-    private static String name = name1;
+    // Private variables 
+    private static String name;
     private static String brand;
     private static String model;
     private static String color;
@@ -35,7 +37,9 @@ public class UserLandingPageUI extends JFrame {
     private static String status = "Not Renting";
 
     
-    public UserLandingPageUI(){
+    public UserLandingPageUI(String AId){
+        this.accID = AId;
+        
         setTitle("Vehicle Rental System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 640);
@@ -57,22 +61,22 @@ public class UserLandingPageUI extends JFrame {
         line2.setBounds(150, 0, 30, 640);
         
         
-        JLabel pageName = new JLabel("HOME PAGE - " + name);
+        JLabel pageName = new JLabel();
         pageName.setForeground(new Color (39, 58, 87));
         pageName.setFont(F2);
         pageName.setBounds(40, 100, 360, 30);
         
-        JLabel l1 = new JLabel("Welcome, " +name + "!");
+        JLabel l1 = new JLabel();
         l1.setForeground(new Color (39, 58, 87));
         l1.setFont(F3);
         l1.setBounds(90, 140, 360, 30);
         
-        JLabel l2 = new JLabel(creationDate);
+        JLabel l2 = new JLabel();
         l2.setForeground(new Color (39, 58, 87));
         l2.setFont(F3);
         l2.setBounds(90, 170, 360, 30);
         
-        JLabel l3 = new JLabel(accType);
+        JLabel l3 = new JLabel();
         l3.setForeground(new Color (39, 58, 87));
         l3.setFont(F3);
         l3.setBounds(90, 200, 360, 30);
@@ -86,7 +90,7 @@ public class UserLandingPageUI extends JFrame {
         JLabel menuLabel = new JLabel("Vehicle Management Menu",SwingConstants.CENTER);
         menuLabel.setForeground(new Color (39, 58, 87));
         menuLabel.setFont(F1);
-        menuLabel.setBounds(0, 40, 900, 30);
+        menuLabel.setBounds(0, 40, 900, 33);
         
         JButton viewVehicleBtn = new JButton("Show Vehicle Available");
         viewVehicleBtn.setFont(F3);
@@ -103,7 +107,25 @@ public class UserLandingPageUI extends JFrame {
         
         JButton rentStatusBtn = new JButton("Show Booking Status");
         rentStatusBtn.setFont(F3);
-
+        
+        try{
+                connectToDB();
+                String loginQuery = "SELECT AccountID, FName, LName, DateCreated, AccountStatus FROM ACCOUNT WHERE AccountID = ? ";
+                PreparedStatement p = conn.prepareStatement(loginQuery);
+                p.setString(1,AId);
+                ResultSet rs = p.executeQuery();
+                
+                if(rs.next()){
+                pageName.setText("HOME PAGE - " + rs.getString("FName"));
+                l1.setText("Welcome, " +rs.getString("FName") +" "+rs.getString("LName")+ "!");
+                l2.setText("Account Status: " + rs.getString("AccountStatus"));
+                l3.setText("Account Created at " + rs.getDate("DateCreated") );
+                }
+                closeConnection();
+        }
+        catch(SQLException e){
+        
+        }
 
         
         
@@ -136,11 +158,11 @@ public class UserLandingPageUI extends JFrame {
 
     private void goToViewVehicle(){
         dispose();
-        new BrowseVehicleUI();
+        new BrowseVehicleUI(accID);
     }
     private void goToRentVehicle(){
         dispose();
-        new Booking();
+        new Booking(accID);
     }
     private void goToReturnVehicle(){
         dispose();
@@ -226,7 +248,24 @@ public class UserLandingPageUI extends JFrame {
         UserLandingPageUI.status = status;
     }
 
-    
+     private void connectToDB(){
+        try {
+        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
+
+     private void closeConnection(){
+        try
+        {
+        conn.close();
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
     
     
     
@@ -235,6 +274,6 @@ public class UserLandingPageUI extends JFrame {
 
 class runner{
     public static void main(String[] args) {
-        new UserLandingPageUI();
+        new UserLandingPageUI("V0001");
     }
 }
