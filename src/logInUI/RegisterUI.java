@@ -5,6 +5,8 @@ package logInUI;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.sql.*;
+import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,6 +22,12 @@ public class RegisterUI extends JFrame {
     private static final Font F2 = new Font("Arial", Font.BOLD, 16);
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
     private static final Color LBLUE = new Color(30,144,255);
+    private int count; //to count the uservalues to auto assign AccountID
+    // JDBC setup
+    private Connection conn;
+    private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
+    private final String DB_USER = "admin";
+    private final String DB_PASS = "admin456";
 
     public RegisterUI(){
         setTitle("Register");
@@ -139,25 +147,70 @@ public class RegisterUI extends JFrame {
 
         signUpBtn.addActionListener(e -> {
             if(fField.getText().isEmpty() || lField.getText().isEmpty() || licenseField.getText().isEmpty()
-                    || eField.getText().isEmpty() || nField.getText().isEmpty()
-                    || new String(pField.getPassword()).isEmpty() || new String(confPField.getPassword()).isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Fields cannot be empty");
-            } else if (!eField.getText().contains("@") || !eField.getText().contains(".com")) {
-                JOptionPane.showMessageDialog(null, "Enter a valid email\n e.g. user@example.com");
-            } else if (!new String(pField.getPassword()).equals(new String(confPField.getPassword()))) {
-                JOptionPane.showMessageDialog(null, "Passwords do not match");
+                || eField.getText().isEmpty() || nField.getText().isEmpty()
+                || new String(pField.getPassword()).isEmpty() || new String(confPField.getPassword()).isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Fields cannot be empty","Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            else if (!eField.getText().contains("@") || !eField.getText().contains(".com")) {
+                JOptionPane.showMessageDialog(null, "Enter a valid email\n e.g. user@example.com","Warning", JOptionPane.WARNING_MESSAGE);
+                } 
+            else if (!nField.getText().startsWith("09")){
+                JOptionPane.showMessageDialog(null, "Phone Number must start with 09","Warning", JOptionPane.WARNING_MESSAGE);                
+            }
+            else if (nField.getText().length() != 11) {
+                JOptionPane.showMessageDialog(null, "Phone number must be exactly 11 digits long", "Warning", JOptionPane.WARNING_MESSAGE);                            
+            }
+            else if (!nField.getText().matches("\\d{11}")) {
+                JOptionPane.showMessageDialog(null, "Phone number must contain only digits", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
+            else if (!new String(pField.getPassword()).equals(new String(confPField.getPassword()))) {
+                JOptionPane.showMessageDialog(null, "Passwords do not match", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
-                try {
-                    Integer.parseInt(nField.getText());
                     int ans = JOptionPane.showConfirmDialog(this, "Are your details accurate?", "Confirmation", JOptionPane.YES_NO_OPTION);
                     if(ans == JOptionPane.YES_OPTION){
                         JOptionPane.showMessageDialog(null, "Account Created Successfully!");
+
+                        try{
+                        LocalDate localDate = LocalDate.now();
+                        Date sqlDate = Date.valueOf(localDate);
+                        connectToDB();
+                        
+                        String getID = "SELECT AccountID FROM ACCOUNT";
+                        PreparedStatement stmt = conn.prepareStatement(getID);
+                        ResultSet rs = stmt.executeQuery();
+                        
+                        while(rs.next()){
+                        System.out.println(rs.getString("AccountID"));
+                        count++;
+                        }
+                        
+                        String query = "INSERT INTO ACCOUNT VALUES (?,?,?,?,?,?,?,?,?,?)";
+                        PreparedStatement p = conn.prepareStatement(query);
+                        p.setString(1, "U"+count);
+                        p.setString(2,fField.getText().trim());
+                        p.setString(3,lField.getText().trim());
+                        p.setString(4,licenseField.getText().trim());
+                        p.setString(5,eField.getText().trim());
+                        p.setString(6,nField.getText().trim());
+                        p.setString(7,pField.getText());
+                        p.setDate(8,sqlDate);
+                        p.setString(9,"User");
+                        p.setString(10,"Not Renting");
+                        p.executeUpdate();
+                        stmt.close();
+                        p.close();
+                        closeConnection();
                         dispose();
+                        count = 0;
                         new LogInUI();
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Phone number must contain only digits.", "Warning", JOptionPane.WARNING_MESSAGE);
-                }
+                        
+                        }
+                            catch(SQLException ex){
+                                JOptionPane.showMessageDialog(null, ex.getMessage());
+                            }
+                        }
+{                    }
+
             }
         });
 
@@ -173,7 +226,26 @@ public class RegisterUI extends JFrame {
         add(pan);
         setVisible(true);
     }
+    
+    private void connectToDB(){
+        try {
+        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
 
+     private void closeConnection(){
+        try
+        {
+        conn.close();
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
+     
     public static void main(String[] args) {
         new RegisterUI();
     }
