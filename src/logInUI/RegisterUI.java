@@ -186,7 +186,7 @@ public class RegisterUI extends JFrame {
                         
                         String query = "INSERT INTO ACCOUNT VALUES (?,?,?,?,?,?,?,?,?,?)";
                         PreparedStatement p = conn.prepareStatement(query);
-                        p.setString(1, "U"+count);
+                        p.setString(1, "U"+(count +1));
                         p.setString(2,fField.getText().trim());
                         p.setString(3,lField.getText().trim());
                         p.setString(4,licenseField.getText().trim());
