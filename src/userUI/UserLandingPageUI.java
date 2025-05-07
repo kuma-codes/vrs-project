@@ -25,16 +25,7 @@ public class UserLandingPageUI extends JFrame {
     private static final String DB_PASS = "admin456";
     private String accID;
     
-    // Private variables 
-    private static String name;
-    private static String brand;
-    private static String model;
-    private static String color;
-    private static String startDate;
-    private static String endDate;
-    private static double dailyRate;
-    private static int totalDays;
-    private static String status = "Not Renting";
+
 
     
     public UserLandingPageUI(String AId){
@@ -170,7 +161,7 @@ public class UserLandingPageUI extends JFrame {
     }
     private void goToViewBookingStatus(){
         dispose();
-        new ViewBookingStatus().showViewBookingStatus();
+        new ViewBookingStatus(accID);
     }
     private void logOut(){
         dispose();
@@ -178,75 +169,8 @@ public class UserLandingPageUI extends JFrame {
         new LogInUI();
     }
     
-    //setter and getter methods for the private variable
     
-    public static String getUserName() {
-        return name;
-    }
-
-    public static String getBrand() {
-        return brand;
-    }
-
-    public static void setBrand(String brand) {
-        UserLandingPageUI.brand = brand;
-    }
-
-    public static String getModel() {
-        return model;
-    }
-
-    public static void setModel(String model) {
-        UserLandingPageUI.model = model;
-    }
-
-    public static String getColor() {
-        return color;
-    }
-
-    public static void setColor(String color) {
-        UserLandingPageUI.color = color;
-    }
-
-    public static String getStartDate() {
-        return startDate;
-    }
-
-    public static void setStartDate(String startDate) {
-        UserLandingPageUI.startDate = startDate;
-    }
-
-    public static String getEndDate() {
-        return endDate;
-    }
-
-    public static void setEndDate(String endDate) {
-        UserLandingPageUI.endDate = endDate;
-    }
-
-    public static double getDailyRate() {
-        return dailyRate;
-    }
-
-    public static void setDailyRate(double dailyRate) {
-        UserLandingPageUI.dailyRate = dailyRate;
-    }
-
-    public static int getTotalDays() {
-        return totalDays;
-    }
-
-    public static void setTotalDays(int totalDays) {
-        UserLandingPageUI.totalDays = totalDays;
-    }
-
-    public static String getStatus() {
-        return status;
-    }
-
-    public static void setStatus(String status) {
-        UserLandingPageUI.status = status;
-    }
+    
 
      private void connectToDB(){
         try {

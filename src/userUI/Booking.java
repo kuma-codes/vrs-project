@@ -206,7 +206,7 @@ public class Booking
                 pnl.add(costFld);
                 pnl.add(proceedBtn);
             }
-                else if(status == "Pending Approval"){
+            else if(status.equals("Pending Approval")){
                     label1.setText("You currently have vehicle waiting for approval,");
                     pnl.add(label1);
                 }
@@ -286,6 +286,6 @@ public class Booking
             }
      }
     public static void main(String[] args) {
-        new Booking("V0001");
+        new Booking("U2");
     }
 }

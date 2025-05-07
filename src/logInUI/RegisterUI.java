@@ -22,7 +22,7 @@ public class RegisterUI extends JFrame {
     private static final Font F2 = new Font("Arial", Font.BOLD, 16);
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
     private static final Color LBLUE = new Color(30,144,255);
-    private int count; //to count the uservalues to auto assign AccountID
+     //to count the uservalues to auto assign AccountID
     // JDBC setup
     private Connection conn;
     private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
@@ -178,7 +178,7 @@ public class RegisterUI extends JFrame {
                         String getID = "SELECT AccountID FROM ACCOUNT";
                         PreparedStatement stmt = conn.prepareStatement(getID);
                         ResultSet rs = stmt.executeQuery();
-                        
+                        int count=0; 
                         while(rs.next()){
                         System.out.println(rs.getString("AccountID"));
                         count++;

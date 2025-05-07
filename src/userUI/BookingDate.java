@@ -3,6 +3,8 @@ package userUI;
 import javax.swing.*;
 import java.awt.*;
 import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
+import java.time.LocalDate;
 
 public class BookingDate {
     JFrame frm;
@@ -11,6 +13,7 @@ public class BookingDate {
 
     public BookingDate(String AId, String vID) 
     {
+        NoPastDatesPolicy noPastDatesPolicy = new NoPastDatesPolicy();
         frm = new JFrame("Booking Date");
         frm.setSize(900, 440);
         frm.setLayout(null);
@@ -48,6 +51,7 @@ public class BookingDate {
         startDateLbl.setForeground(new Color (39, 58, 87));
         startDateLbl.setBounds(100, 130, 300, 35);
         startDateFld = new DatePicker();
+        startDateFld.getSettings().setVetoPolicy(noPastDatesPolicy);
         startDateFld.getComponentDateTextField().setEditable(false); 
         startDateFld.getComponentToggleCalendarButton().setText("Select");
         startDateFld.setBounds(100, 160, 650, 40);
@@ -70,8 +74,6 @@ public class BookingDate {
                 
                 String startDateStr = startDateFld.getDate().toString();
                 String endDateStr = endDateFld.getDate().toString();
-                UserLandingPageUI.setStartDate(startDateStr);
-                UserLandingPageUI.setEndDate(endDateStr);
 
                 if (startDateStr.isEmpty() || endDateStr.isEmpty()) {
                     JOptionPane.showMessageDialog(frm, "Please enter both dates!");
@@ -101,20 +103,15 @@ public class BookingDate {
                     return;
                 }
 
-                UserLandingPageUI.setTotalDays(endDays - startDays + 1); // +1 to include start day
-                UserLandingPageUI.setStatus("Pending Approval");
-                JOptionPane.showMessageDialog(frm, "Booking Succesfully created, please wait for approval of your booking.");
+                JOptionPane.showMessageDialog(frm, "Please check your details before confirming\n your transaction.");
                 frm.dispose();
                 
-                BookingSummary.showSummary(
-                    UserLandingPageUI.getUserName(),
-                    UserLandingPageUI.getBrand(),
-                    UserLandingPageUI.getModel(),
-                    UserLandingPageUI.getColor(),
-                    startDateStr,
-                    endDateStr,
-                    UserLandingPageUI.getDailyRate(),
-                    UserLandingPageUI.getStatus()
+                new BookingSummary(
+                        AId,
+                        vID,
+                        startDateFld.getDate(),
+                        endDateFld.getDate(),
+                        endDays - startDays + 1 // +1 to include start day
                 );
                 
             } 
@@ -143,4 +140,11 @@ public class BookingDate {
         frm.setVisible(true);
     }
 
+}
+
+class NoPastDatesPolicy implements DateVetoPolicy {
+    @Override
+    public boolean isDateAllowed(LocalDate date) {
+        return !date.isBefore(LocalDate.now()); // Only allow today and future
+    }
 }
