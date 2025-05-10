@@ -179,6 +179,7 @@ public class Payment {
                     else if ("CARD".equals(selected)) {
                         
                         frm.dispose(); 
+                        amountPaid = totalFee;
                         new CardInfo(accID,rentalID,vehicleID,rentalFee,damageFee,otFee, totalFee, amountPaid, change);
                         
                     }

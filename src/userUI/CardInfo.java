@@ -121,6 +121,7 @@ public class CardInfo {
                     updV.close();
                     updR.close();
                     frm.dispose();
+                    
                     new Receipt(accID,rentalID,vehicleID,rentalFee, damageFee, otFee,totalFee, amountPaid, change);
                     }
                     catch(SQLException sqle){

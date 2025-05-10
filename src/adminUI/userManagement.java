@@ -11,15 +11,27 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.Color;   
+import java.awt.Color;
+import java.sql.*;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class userManagement extends JFrame {
 
-
-    private static final Color DBLUE = new Color(100, 149, 237);
+    private static final Font fontA = new Font("Arial", Font.BOLD, 18);
+    private static final Font fontB = new Font("Arial", Font.BOLD, 14);
+    private static final Color lblue = new Color(135, 206, 235);
+    private static final Color dblue = new Color(100, 149, 237);
 
     private JPanel mainPnl;
     private JPanel viewUsersPnl, addUserPnl, removeUserPnl;
+    
+    // JDBC setup
+    private Connection conn;
+    private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
+    private final String DB_USER = "admin";
+    private final String DB_PASS = "admin456";
+    private ArrayList<String> vehicleData = new ArrayList<>();
 
     public userManagement() {
         setTitle("User Management");
@@ -28,6 +40,7 @@ public class userManagement extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
+        connectToDB();
 
         mainPnl = new JPanel();
         mainPnl.setBackground(new Color(196, 227, 244));
@@ -35,11 +48,11 @@ public class userManagement extends JFrame {
         mainPnl.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(DBLUE);
+        line1.setBackground(dblue);
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(DBLUE);
+        line2.setBackground(dblue);
         line2.setBounds(150, 0, 30, 640);
 
         JLabel title = new JLabel("USER MANAGEMENT", SwingConstants.CENTER);
@@ -78,6 +91,24 @@ public class userManagement extends JFrame {
         setVisible(true);
     }
 
+    private void connectToDB() {
+        try {
+            conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        } 
+        catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Database connection error: " + e.getMessage());
+        }
+    }
+    
+    private void closeConnection(){
+        try {
+        conn.close();
+        }
+        catch(SQLException e){
+        e.printStackTrace();
+        }
+    }
+    
     private JPanel createPanel(String title) {
         JPanel panel = new JPanel();
         panel.setBackground(new Color(196, 227, 244));
@@ -91,11 +122,11 @@ public class userManagement extends JFrame {
         panel.add(titlelbl);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(DBLUE);
+        line1.setBackground(dblue);
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(DBLUE);
+        line2.setBackground(dblue);
         line2.setBounds(150, 0, 30, 640);
 
         // View Users Panel
@@ -125,12 +156,10 @@ public class userManagement extends JFrame {
             resetBtn.setBounds(660, 140, 100, 25);
             panel.add(resetBtn);
 
-            String[] userNames = {"User ID","Customer ID", "Name", "Email", "Role", "Registration Date"};
-            Object[][] userData = {{"UR01", "CSO1", "Juan Dela Cruz", "juanDC@gmail.com", "User", "04-12-2025"},
-                                   {"UR02", "NULL","Kesya Pulido", "kez@gmail.com", "Admin", "02-07-2025"},
-                                   {"UR03", "NULL","Sesar Moreno", "zar@gmail.com", "Admin", "01-09-2025"}};
-
-            DefaultTableModel table = new DefaultTableModel(userNames, 0);
+            String[] attributes = {"AccountID", "FirstName", "Surname", "DriverLicenseNo", "Email", "DateCreated", "Role", "Status"};
+            Object[][] data = fetchUserData();
+                    
+            DefaultTableModel table = new DefaultTableModel(data, attributes);
             JTable userTab = new JTable(table);
             userTab.setRowHeight(25);
             userTab.setEnabled(false);
@@ -143,18 +172,18 @@ public class userManagement extends JFrame {
             back.setBounds(730, 520, 100, 40);
             panel.add(back);
 
-            viewUserFltr(userData, table, " ", "All");
+            viewUserFltr(table, " ", "All");
 
             searchBtn.addActionListener(e -> {
                 String keyword = searchFld.getText().toLowerCase();
                 String selectRole = roleBox.getSelectedItem().toString();
-                viewUserFltr(userData, table, keyword, selectRole);
+                viewUserFltr(table, keyword, selectRole);
             });
 
             resetBtn.addActionListener(e -> {
                 searchFld.setText("");
                 roleBox.setSelectedIndex(0);
-                viewUserFltr(userData, table, "", "All");
+                viewUserFltr(table, "", "All");
             });
 
             back.addActionListener(e -> switchPnl(mainPnl));
@@ -188,12 +217,10 @@ public class userManagement extends JFrame {
             resetBtn.setBounds(660, 140, 100, 25);
             panel.add(resetBtn);
 
-            String[] userNames = {"User ID", "Customer ID", "Name", "Role"};
-            Object[][] data = {{"UR01", "CSO1", "Juan Dela Cruz", "User"},
-                               {"UR02", "NULL", "kesya pulido", "Admin"},
-                               {"UR03", "NULL", "sesar moreno", "Admin"}};
+            String[] attributes = {"AccountID", "FirstName", "Surname", "DriverLicenseNo", "Email", "DateCreated", "Role", "Status"};
+            Object[][] data = fetchUserData();
 
-            DefaultTableModel table = new DefaultTableModel(userNames, 0);
+            DefaultTableModel table = new DefaultTableModel(data, attributes);
             JTable userTab = new JTable(table);
             userTab.setRowHeight(25);
             userTab.setEnabled(false);
@@ -223,13 +250,18 @@ public class userManagement extends JFrame {
             searchBtn.addActionListener(e -> {
                 String keyword = searchFld.getText().toLowerCase();
                 String selectRole = roleBox.getSelectedItem().toString();
-                removeUserFltr(data, table, keyword, selectRole);
+                viewUserFltr(table, keyword, selectRole);
             });
 
             resetBtn.addActionListener(e -> {
                 searchFld.setText(" ");
                 roleBox.setSelectedIndex(0);
                 removeUserFltr(data, table, " ", "All");
+            });
+            
+            removeUserBtn.addActionListener(e -> {
+                String userId = userFld.getText().trim();
+                removeUser(userId, table);
             });
 
             back.addActionListener(e -> switchPnl(mainPnl));
@@ -241,46 +273,108 @@ public class userManagement extends JFrame {
         return panel;
     }
     
-    private void viewUserFltr(Object[][] data, DefaultTableModel vModel, String keyword, String roleFltr) {
-        vModel.setRowCount(0); 
+    private void viewUserFltr(DefaultTableModel vModel, String keyword, String roleFltr) {
+        vModel.setRowCount(0);  
+        keyword = keyword.toLowerCase();
+        Object[][] data = fetchUserData();
 
-    for (Object[] row : data) {
-        String rows = String.join(" ", 
-            row[0].toString().toLowerCase(), 
-            row[1].toString().toLowerCase(), 
-            row[2].toString().toLowerCase(), 
-            row[3].toString().toLowerCase(), 
-            row[4].toString().toLowerCase(), 
-            row[5].toString().toLowerCase());
+        for (Object[] row : data) {
+            String combined = String.join(" ", row[0].toString(), row[1].toString(), row[2].toString(), row[3].toString(), 
+                                               row[4].toString(), row[5].toString()).toLowerCase();
+            boolean match = combined.contains(keyword);
+            boolean roleMatch = roleFltr.equalsIgnoreCase("All") || row[6].toString().equalsIgnoreCase(roleFltr);
 
-        boolean match = rows.contains(keyword.toLowerCase());
-        boolean matchRole = roleFltr.equals("All") || row[4].toString().equalsIgnoreCase(roleFltr);
-
-        if (match && matchRole) {
-            vModel.addRow(row);
+            if (match && roleMatch) {
+                vModel.addRow(row); 
+            }
         }
     }
-}
+    
+    private Object[][] fetchUserData() {
+        ArrayList<Object[]> userData = new ArrayList<>();
+        String query = "SELECT AccountID, FName, LName, DriverLicenseNo, Email, DateCreated, AccountRole, AccountStatus FROM ACCOUNT";
+
+        try (Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query)) {
+
+        while (rs.next()) {
+            String accountId = rs.getString("AccountID");
+            String fName = rs.getString("FName");
+            String lName = rs.getString("LName");
+            String driverLicenseNo = rs.getString("DriverLicenseNo");
+            String email = rs.getString("Email");
+            String dateCreated = rs.getString("DateCreated");
+            String accountRole = rs.getString("AccountRole");
+            String accountStatus = rs.getString("AccountStatus");
+
+            userData.add(new Object[]{accountId, fName, lName, driverLicenseNo, email, dateCreated, accountRole, accountStatus});
+         }
+        } 
+            catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error fetching data from database: " + e.getMessage());
+            }
+        return userData.toArray(new Object[0][]);
+    }
     
     private void removeUserFltr(Object[][] data, DefaultTableModel rModel, String keyword, String roleFltr) {
         rModel.setRowCount(0);
-        
-    for (Object[] row : data) {
-        String rows = String.join(" ", 
-            row[0].toString().toLowerCase(),
-            row[1].toString().toLowerCase(),
-            row[2].toString().toLowerCase(),
-            row[3].toString().toLowerCase()
-        );
-        
-        boolean match = rows.contains(keyword.toLowerCase());
-        boolean matchRole = roleFltr.equals("All") || row[3].toString().equalsIgnoreCase(roleFltr);
-        
-        if (match && matchRole) {
-            rModel.addRow(row);
+        keyword = keyword.toLowerCase();
+
+        for (Object[] row : data) {
+            String combined = String.join(" ", row[0].toString(), row[1].toString(), row[2].toString(), row[3].toString()).toLowerCase();
+            boolean match = combined.contains(keyword);
+            boolean roleMatch = roleFltr.equalsIgnoreCase("All") || row[3].toString().equalsIgnoreCase(roleFltr);
+
+            if (match && roleMatch) {
+                rModel.addRow(row);
+            }
         }
     }
-}
+
+    private void removeUser(String userId, DefaultTableModel model) {
+        String status = "";
+        if (userId.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a User ID.");
+            return;
+        }
+            
+        
+        
+        try {
+            String check = "SELECT * FROM ACCOUNT WHERE AccountID = ?";
+            PreparedStatement checkUser = conn.prepareStatement(check);
+            checkUser.setString(1, userId);
+            ResultSet rs = checkUser.executeQuery();
+            if(rs.next()){
+                status = rs.getString("AccountStatus");
+            }
+            
+            if (!status.equals("Not Renting")){
+                JOptionPane.showMessageDialog(this, "Account is currently on transaction, cannot remove.");
+                return;
+            }
+            
+            String query = "DELETE FROM RENTAL_DETAILS WHERE AccountID = ? "
+                    + "DELETE FROM ACCOUNT WHERE AccountID = ? ";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, userId);
+            stmt.setString(2, userId);
+
+        int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "User successfully removed.");
+                Object[][] updatedData = fetchUserData();
+                removeUserFltr(updatedData, model, " ", "All");
+            } 
+                else {
+                    JOptionPane.showMessageDialog(this, "User ID not found.");
+                }
+        } 
+            catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error deleting user: " + ex.getMessage());
+            }
+    }
 
     private void switchPnl(JPanel newPnl) {
         getContentPane().removeAll();
