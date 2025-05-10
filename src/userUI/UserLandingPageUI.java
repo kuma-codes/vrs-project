@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.sql.*;
+import javax.swing.JOptionPane;
 
 public class UserLandingPageUI extends JFrame {
 
@@ -113,6 +114,8 @@ public class UserLandingPageUI extends JFrame {
                 l3.setText("Account Created at " + rs.getDate("DateCreated") );
                 }
                 closeConnection();
+                rs.close();
+                p.close();
         }
         catch(SQLException e){
         
@@ -157,21 +160,21 @@ public class UserLandingPageUI extends JFrame {
     }
     private void goToReturnVehicle(){
         dispose();
-        new ReturnVehicle();
+        new ReturnVehicle(accID);
     }
     private void goToViewBookingStatus(){
         dispose();
         new ViewBookingStatus(accID);
     }
     private void logOut(){
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?",null,JOptionPane.YES_NO_OPTION);
+        if(ans==JOptionPane.YES_OPTION){
         dispose();
-        System.out.println("Logged Out Succesfully");
         new LogInUI();
+        }
     }
     
     
-    
-
      private void connectToDB(){
         try {
         conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);

@@ -6,8 +6,10 @@ package logInUI;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.*;
+import java.text.ParseException;
 import java.time.LocalDate;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 
 
 public class RegisterUI extends JFrame {
@@ -36,7 +39,16 @@ public class RegisterUI extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
-
+        MaskFormatter licenseMask = null;
+        MaskFormatter numberMask = null;
+        try{
+        licenseMask = new MaskFormatter("U##-##-######");
+        licenseMask.setPlaceholderCharacter('_');
+        numberMask = new MaskFormatter("09#########");
+        numberMask.setPlaceholderCharacter('_');
+        }catch(ParseException e){
+        
+        }
         JPanel pan = new JPanel();
         pan.setBackground(new Color(196, 227, 244));
         pan.setBounds(0, 0, 900, 740);
@@ -75,15 +87,17 @@ public class RegisterUI extends JFrame {
         lField.setFont(F3);
         lField.setBounds(100, 130, 600, 30);
 
-        JLabel licenseLabel = new JLabel("Drivers License ID No:");
+        JLabel licenseLabel = new JLabel("Drivers License ID No.: (e.g. L12-32-321321)");
         licenseLabel.setFont(new Font("Arial", Font.BOLD, 15));
         licenseLabel.setForeground(new Color (39, 58, 87));
-        licenseLabel.setBounds(100, 170, 300, 35);
-        JTextField licenseField = new JTextField();
+        licenseLabel.setBounds(100, 170, 500, 35);
+
+
+        JFormattedTextField licenseField = new JFormattedTextField(licenseMask);
         licenseField.setFont(F3);
         licenseField.setBounds(100, 200, 600, 30);
 
-        JLabel eLabel = new JLabel("Email:");
+        JLabel eLabel = new JLabel("Email: (e.g. 123@example.com)");
         eLabel.setFont(new Font("Arial", Font.BOLD, 15));
         eLabel.setForeground(new Color (39, 58, 87));
         eLabel.setBounds(100, 240, 300, 35);
@@ -95,7 +109,7 @@ public class RegisterUI extends JFrame {
         nLabel.setFont(new Font("Arial", Font.BOLD, 15));
         nLabel.setForeground(new Color (39, 58, 87));
         nLabel.setBounds(100, 310, 300, 35);
-        JTextField nField = new JTextField();
+        JFormattedTextField nField = new JFormattedTextField(numberMask);
         nField.setFont(F3);
         nField.setBounds(100, 340, 600, 30);
 
@@ -175,13 +189,14 @@ public class RegisterUI extends JFrame {
                         Date sqlDate = Date.valueOf(localDate);
                         connectToDB();
                         
-                        String getID = "SELECT AccountID FROM ACCOUNT";
+                        String getID = "SELECT TOP 1 AccountID FROM ACCOUNT ORDER BY AccountID DESC";
                         PreparedStatement stmt = conn.prepareStatement(getID);
                         ResultSet rs = stmt.executeQuery();
                         int count=0; 
-                        while(rs.next()){
-                        System.out.println(rs.getString("AccountID"));
-                        count++;
+                        if (rs.next()) {
+                            String lastID = rs.getString("AccountID"); 
+                            lastID = lastID.substring(1);
+                            count = Integer.parseInt(lastID);
                         }
                         
                         String query = "INSERT INTO ACCOUNT VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -208,6 +223,7 @@ public class RegisterUI extends JFrame {
                             catch(SQLException ex){
                                 JOptionPane.showMessageDialog(null, ex.getMessage());
                             }
+                            
                         }
 {                    }
 
@@ -225,6 +241,7 @@ public class RegisterUI extends JFrame {
         pan.add(line2);
         add(pan);
         setVisible(true);
+        
     }
     
     private void connectToDB(){

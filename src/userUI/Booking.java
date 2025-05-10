@@ -23,6 +23,7 @@ public class Booking
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 640);
         frm.setLayout(null);
+        frm.setResizable(false);
         frm.setLocationRelativeTo(null);
 
         JPanel pnl = new JPanel();
@@ -185,7 +186,6 @@ public class Booking
                     else{
                         frm.dispose();
                         new BookingDate(AId, vehicleIDSelected);
-                        System.out.println(vehicleIDSelected);
                         closeConnection();
                         }
 
@@ -207,7 +207,7 @@ public class Booking
                 pnl.add(proceedBtn);
             }
             else if(status.equals("Pending Approval")){
-                    label1.setText("You currently have vehicle waiting for approval,");
+                    label1.setText("You currently have vehicle waiting for approval.");
                     pnl.add(label1);
                 }
                     else{
@@ -286,6 +286,6 @@ public class Booking
             }
      }
     public static void main(String[] args) {
-        new Booking("U2");
+        new Booking("U1");
     }
 }

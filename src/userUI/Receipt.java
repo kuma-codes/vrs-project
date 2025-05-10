@@ -5,136 +5,205 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.sql.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Receipt {
-    public Receipt() {
+    private Connection conn;
+    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
+    private static final String DB_USER = "admin";
+    private static final String DB_PASS = "admin456";
+    public Receipt(String accID, String rentalID, String vehicleID,Double rentalFee,Double damageFee,Double otFee,Double totalFee, Double amountPaid, Double change) {
+        DecimalFormat twodec = new DecimalFormat("0.00");
+        String fullName = "";
+        String vehicleDetail = "";
+        LocalDate startDate;
+        LocalDate endDate;
+        LocalDate billingDate;
+        String formattedStartDate = "";
+        String formattedEndDate = "";
+        String formattedBillingDate = "";
+        int totalDays = 0;
+        
+        try{
+            connectToDB();
+            PreparedStatement getAccDetails = conn.prepareStatement("SELECT FName, LName FROM ACCOUNT WHERE AccountID = ?");
+            getAccDetails.setString(1, accID);
+            ResultSet aDetails = getAccDetails.executeQuery();
+            if(aDetails.next()){
+            fullName = aDetails.getString("FName") + " " + aDetails.getString("LName");
+            }
+            getAccDetails.close();
+            aDetails.close();
 
-        JFrame frm = new JFrame("Vehicle Rental System");      // FRAME
+            PreparedStatement getVehicleDetails = conn.prepareStatement("SELECT * FROM VEHICLES WHERE VehicleID = ?");
+            getVehicleDetails.setString(1, vehicleID);
+            ResultSet vDetails = getVehicleDetails.executeQuery();
+            if(vDetails.next()){
+            vehicleDetail = vDetails.getString("Brand") + " " +vDetails.getString("Model");
+            }
+            getVehicleDetails.close();
+            vDetails.close();
+            
+            PreparedStatement getRentalDetails = conn.prepareStatement("SELECT * FROM RENTAL_DETAILS WHERE RentalID = ?");
+            getRentalDetails.setString(1, rentalID);
+            ResultSet rDetails = getRentalDetails.executeQuery();  
+            if(rDetails.next()){
+            startDate = rDetails.getDate("PickupDate").toLocalDate();
+            endDate = rDetails.getDate("ReturnDate").toLocalDate();
+            billingDate = rDetails.getDate("BillingDate").toLocalDate();
+                   
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+            long daysBetween = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+            totalDays = (int) daysBetween;
+            formattedStartDate = startDate.format(formatter);
+            formattedEndDate = endDate.format(formatter);
+            formattedBillingDate = billingDate.format(formatter);
+
+            }
+        }
+        catch(SQLException e){
+        
+        }
+        
+        JFrame frm = new JFrame("Vehicle Rental System");      
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frm.setSize(900, 640);
+        frm.setSize(900, 740);
         frm.setLayout(null);
+        frm.setResizable(false);
         frm.setLocationRelativeTo(null);
         
 
-        JPanel pan = new JPanel();                              // PANEL
+        JPanel pan = new JPanel();                              
         pan.setBackground(new Color(196, 227, 244));
-        pan.setBounds(0, 0, 900, 640);
+        pan.setBounds(0, 0, 900, 740);
         pan.setLayout(null);
 
-        JPanel line1 = new JPanel();                            // 2 Lines
+        JPanel line1 = new JPanel();                            
         line1.setBackground(new Color(100, 149, 237)); 
-        line1.setBounds(80, 0, 30, 640);
+        line1.setBounds(80, 0, 30, 740);
 
         JPanel line2 = new JPanel();
         line2.setBackground(new Color(100, 149, 237)); 
-        line2.setBounds(150, 0, 30, 640);
+        line2.setBounds(150, 0, 30, 740);
         
         JLabel receipt = new JLabel("RECEIPT", SwingConstants.CENTER);
         receipt.setForeground(new Color (39, 58, 87));
         receipt.setFont(new Font ("Arial", Font.BOLD,60));
         receipt.setBounds(0, 80, 900, 50);
         
-        JButton done = new JButton("DONE");                     // Done button
+        JButton done = new JButton("DONE");                  
         done.setForeground(Color.WHITE);
         done.setFont(new Font("Arial", Font.BOLD, 20));
         done.setBackground(new Color(71, 112, 139));
-        done.setBounds(360, 510, 150, 30);
+        done.setBounds(360, 620, 150, 30);
         
-        JTextField lfield = new JTextField();                    // Text field
+        JTextField lfield = new JTextField();                    
         lfield.setBackground(new Color(217, 217, 217));
-        lfield.setBounds(30, 180, 820, 290);
+        lfield.setBounds(30, 180, 820, 390);
         
-        JLabel home1 = new JLabel("HOME");                      // HOME and BACK
+        JLabel home1 = new JLabel("HOME");                      
         home1.setForeground(new Color(0, 0, 139));
         home1.setFont(new Font("Arial", Font.BOLD, 12));
-        home1.setBounds(820, 560, 110, 40);
+        home1.setBounds(820, 660, 110, 40);
         
-        JLabel back1 = new JLabel("BACK");
-        back1.setForeground(new Color(0, 0, 139));
-        back1.setFont(new Font("Arial", Font.BOLD, 12));
-        back1.setBounds(10, 2, 110, 40);
-
         // eme
-        JLabel mema  = new JLabel("Rental Company: VEHICLE RENTAL SYSTEM");
-        JLabel mema2 = new JLabel("Receipt No.: 0002458");
-        JLabel mema3 = new JLabel("Date Issued: April 14, 2025");
+        JLabel RC  = new JLabel("Rental Company: VEHICLE RENTAL SYSTEM");
+        JLabel BN = new JLabel("Billing No.: "+rentalID+accID+vehicleID);
+        JLabel BD = new JLabel("Billing Date: " + formattedBillingDate);
 
-        mema.setForeground(Color.BLACK);
-        mema.setFont(new Font("Arial", Font.BOLD, 11));
-        mema.setBounds(80, 190, 280, 20);
+        RC.setForeground(Color.BLACK);
+        RC.setFont(new Font("Arial", Font.BOLD, 11));
+        RC.setBounds(80, 190, 280, 20);
 
-        mema2.setForeground(Color.BLACK);
-        mema2.setFont(new Font("Arial", Font.BOLD, 11));
-        mema2.setBounds(80, 210, 280, 20);
+        BN.setForeground(Color.BLACK);
+        BN.setFont(new Font("Arial", Font.BOLD, 11));
+        BN.setBounds(80, 210, 280, 20);
 
-        mema3.setForeground(Color.BLACK);
-        mema3.setFont(new Font("Arial", Font.BOLD, 11));
-        mema3.setBounds(80, 230, 280, 20);
+        BD.setForeground(Color.BLACK);
+        BD.setFont(new Font("Arial", Font.BOLD, 11));
+        BD.setBounds(80, 230, 280, 20);
 
         // Customer details
-        JLabel mema4  = new JLabel("Customer Name:                             Juan Dela Cruz");
-        JLabel mema5  = new JLabel("Car Brand:                                          Toyota");
-        JLabel mema6  = new JLabel("Car Model:                                          Corolla");
-        JLabel mema7  = new JLabel("Car Color:                                           Black");
-        JLabel mema8  = new JLabel("Rental Start Date:                              April 10, 2025");
-        JLabel mema9  = new JLabel("Rental End Date:                                April 13, 2025");
-        JLabel mema10 = new JLabel("Total Rental Time:                            3 Days");
-        JLabel mema11 = new JLabel("Daily Rate:                                           $50");
-        JLabel mema12 = new JLabel("Total Payment:                                   $150");
+        JLabel CN  = new JLabel("Customer Name:                                                                                                                                                                 " + fullName);
+        JLabel VBM  = new JLabel("Vehicle brand & Model:                                                                                                                                                     " + vehicleDetail);
+        JLabel RSD  = new JLabel("Rental Start Date:                                                                                                                                                               " + formattedStartDate);
+        JLabel RED  = new JLabel("Rental End Date:                                                                                                                                                                 " + formattedEndDate);
+        JLabel RF  = new JLabel("Rental fee:                                                                            $" + String.valueOf(twodec.format(rentalFee)));
+        JLabel TRD = new JLabel("Total Rental Days:                                                               " + totalDays + " ");
+        JLabel OF  = new JLabel("Ot fee:                                                                                   $" + String.valueOf(twodec.format(otFee)));
+        JLabel DF = new JLabel("Damage fee:                                                                         $"+String.valueOf(twodec.format(damageFee)));
+        JLabel TF = new JLabel("Total fee:                                                                              $"+String.valueOf(twodec.format(totalFee)));
+        JLabel AP = new JLabel("Amount Paid:                                                                        $"+String.valueOf(twodec.format(amountPaid)));
+        JLabel C = new JLabel("Change:       $"+String.valueOf(twodec.format(change)));
+        
+        CN.setForeground(Color.BLACK);
+        CN.setFont(new Font("Arial", Font.BOLD, 12));
+        CN.setBounds(80, 280, 900, 20);
 
-        mema4.setForeground(Color.BLACK);
-        mema4.setFont(new Font("Arial", Font.BOLD, 10));
-        mema4.setBounds(280, 260, 280, 20);
+        VBM.setForeground(Color.BLACK);
+        VBM.setFont(new Font("Arial", Font.BOLD, 12));
+        VBM.setBounds(80, 300, 900, 20);
 
-        mema5.setForeground(Color.BLACK);
-        mema5.setFont(new Font("Arial", Font.BOLD, 10));
-        mema5.setBounds(280, 280, 280, 20);
+        RF.setForeground(Color.BLACK);
+        RF.setFont(new Font("Arial", Font.BOLD, 12));
+        RF.setBounds(240, 380, 900, 20);
 
-        mema6.setForeground(Color.BLACK);
-        mema6.setFont(new Font("Arial", Font.BOLD, 10));
-        mema6.setBounds(280, 300, 280, 20);
+        OF.setForeground(Color.BLACK);
+        OF.setFont(new Font("Arial", Font.BOLD, 12));
+        OF.setBounds(240, 420, 900, 20);
 
-        mema7.setForeground(Color.BLACK);
-        mema7.setFont(new Font("Arial", Font.BOLD, 10));
-        mema7.setBounds(280, 320, 280, 20);
+        RSD.setForeground(Color.BLACK);
+        RSD.setFont(new Font("Arial", Font.BOLD, 12));
+        RSD.setBounds(80, 320, 900, 20);
 
-        mema8.setForeground(Color.BLACK);
-        mema8.setFont(new Font("Arial", Font.BOLD, 10));
-        mema8.setBounds(280, 340, 280, 20);
+        RED.setForeground(Color.BLACK);
+        RED.setFont(new Font("Arial", Font.BOLD, 12));
+        RED.setBounds(80, 340, 900, 20);
 
-        mema9.setForeground(Color.BLACK);
-        mema9.setFont(new Font("Arial", Font.BOLD, 10));
-        mema9.setBounds(280, 360, 280, 20);
+        TRD.setForeground(Color.BLACK);
+        TRD.setFont(new Font("Arial", Font.BOLD, 12));
+        TRD.setBounds(240, 400, 900, 20);
 
-        mema10.setForeground(Color.BLACK);
-        mema10.setFont(new Font("Arial", Font.BOLD, 10));
-        mema10.setBounds(280, 380, 280, 20);
+        DF.setForeground(Color.BLACK);
+        DF.setFont(new Font("Arial", Font.BOLD, 12));
+        DF.setBounds(240, 440, 900, 20);
 
-        mema11.setForeground(Color.BLACK);
-        mema11.setFont(new Font("Arial", Font.BOLD, 10));
-        mema11.setBounds(280, 400, 280, 20);
-
-        mema12.setForeground(Color.BLACK);
-        mema12.setFont(new Font("Arial", Font.BOLD, 10));
-        mema12.setBounds(280, 420, 280, 20);
+        TF.setForeground(Color.BLACK);
+        TF.setFont(new Font("Arial", Font.BOLD, 12));
+        TF.setBounds(240, 460, 900, 20);
+        
+        AP.setForeground(Color.BLACK);
+        AP.setFont(new Font("Arial", Font.BOLD, 12));
+        AP.setBounds(240, 480, 900, 20);
+        
+        C.setForeground(Color.BLACK);
+        C.setFont(new Font("Arial", Font.BOLD, 14));
+        C.setBounds(360, 530, 900, 20);
 
            
-        pan.add(mema12);
-        pan.add(mema11);
-        pan.add(mema10);
-        pan.add(mema9);
-        pan.add(mema8);
-        pan.add(mema7);
-        pan.add(mema6);
-        pan.add(mema5);
-        pan.add(mema4);
-        pan.add(mema3);
-        pan.add(mema2);
-        pan.add(mema);
-        pan.add(back1);
+        done.addActionListener(e -> {frm.dispose(); new UserLandingPageUI(accID);});
+        
+        pan.add(C);
+        pan.add(AP);
+        pan.add(TF);
+        pan.add(DF);
+        pan.add(TRD);
+        pan.add(RED);
+        pan.add(RSD);
+        pan.add(OF);
+        pan.add(RF);
+        pan.add(VBM);
+        pan.add(CN);
+        pan.add(BD);
+        pan.add(BN);
+        pan.add(RC);
         pan.add(home1);
         pan.add(lfield);
         pan.add(done);
@@ -145,8 +214,26 @@ public class Receipt {
         frm.add(pan);
         frm.setVisible(true);
     }
+     private void connectToDB(){
+        try {
+        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
 
-    public static void main(String[] args) {
-        new Receipt();
-    }
+     private void closeConnection(){
+        try
+        {
+        conn.close();
+        }
+            catch(SQLException e){
+            e.printStackTrace();
+            }
+     }
+   public static void main(String[] args) {
+       new Receipt("","","",0.0,0.0,0.0,0.0,0.0,0.0);
+}
+
 }

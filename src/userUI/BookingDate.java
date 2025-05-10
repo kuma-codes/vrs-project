@@ -17,6 +17,7 @@ public class BookingDate {
         frm = new JFrame("Booking Date");
         frm.setSize(900, 440);
         frm.setLayout(null);
+        frm.setResizable(false);
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setLocationRelativeTo(null);
 

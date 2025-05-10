@@ -21,6 +21,7 @@ public class BookingSummary{
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 640);
         frm.setLayout(null);
+        frm.setResizable(false);
         frm.setLocationRelativeTo(null);
         
 
@@ -115,7 +116,7 @@ public class BookingSummary{
 
         // Confirm Button
         JButton confirmBtn = new JButton("Confirm Transaction");
-        confirmBtn.setBounds(350, 520, 130, 40);
+        confirmBtn.setBounds(350, 520, 180, 40);
         confirmBtn.setFocusPainted(false);
         confirmBtn.setFont(new Font("Arial", Font.BOLD, 14));
         
@@ -131,14 +132,15 @@ public class BookingSummary{
 
                     
                     connectToDB();
-                    String getID = "SELECT RentalID FROM RENTAL_DETAILS";
+                    String getID = "SELECT TOP 1 RentalID FROM RENTAL_DETAILS ORDER BY RentalID DESC";
                     PreparedStatement stmt = conn.prepareStatement(getID);
                     ResultSet rs = stmt.executeQuery();
-                    
-                    while(rs.next()){
-                    System.out.println(rs.getString("RentalID"));
-                    count++;
+                    if (rs.next()) {
+                        String lastID = rs.getString("RentalID"); 
+                        lastID = lastID.substring(1);
+                        count = Integer.parseInt(lastID);
                     }
+
                     rs.close();
                     
                     String addRental= "INSERT INTO RENTAL_DETAILS "

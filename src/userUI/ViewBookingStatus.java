@@ -27,6 +27,7 @@ public class ViewBookingStatus extends JFrame{
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 640);
         frm.setLayout(null);
+        frm.setResizable(false);
         frm.setLocationRelativeTo(null);
         
 
@@ -112,15 +113,27 @@ public class ViewBookingStatus extends JFrame{
         closeConnection();
         }
         
-        if(!accountStatus.equals("Not Renting")){
+        if(!accountStatus.equals("Not Renting") && !rentStatus.equals("Completed")){
             String sDate = startDate.toString();
             String eDate = endDate.toString();
             String[] startParts = sDate.split("-");
             String[] endParts = eDate.split("-");
+            
+            // Parse each part of the start date into integers
+            int startYear = Integer.parseInt(startParts[0]);
+            int startMonth = Integer.parseInt(startParts[1]);
             int startDay = Integer.parseInt(startParts[2]);
+
+            // Parse each part of the end date into integers
+            int endYear = Integer.parseInt(endParts[0]);
+            int endMonth = Integer.parseInt(endParts[1]);
             int endDay = Integer.parseInt(endParts[2]);
-            int totalDays = endDay - startDay + 1;
-            System.out.println(totalDays);
+
+            // Convert each date into "days since year 0"
+            int startDays = startYear * 365 + (startMonth - 1) * 30 + startDay;
+            int endDays = endYear * 365 + (endMonth - 1) * 30 + endDay;
+            int totalDays = endDays - startDays + 1;
+            
             // Booking Summary
             JLabel nameLbl = new JLabel("Customer Name: " + name);
             nameLbl.setBounds(20, 20, 260, 25);
@@ -170,7 +183,7 @@ public class ViewBookingStatus extends JFrame{
         
        // Cancel Button
         JButton cancelBtn = new JButton("Cancel Transaction");
-        cancelBtn.setBounds(350, 520, 130, 40);
+        cancelBtn.setBounds(350, 520, 180, 40);
         cancelBtn.setFocusPainted(false);
         cancelBtn.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -179,7 +192,7 @@ public class ViewBookingStatus extends JFrame{
                    int ans = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel this Transaction?", "Confirmation", JOptionPane.YES_NO_OPTION);
                    if(ans==JOptionPane.YES_OPTION){
                    connectToDB();
-                   String updR = "UPDATE RENTAL_DETAILS SET RentalStatus = 'Cancelled' WHERE AccountID = ? and VehicleID = ? and RentalStatus = 'Pending Approval'";
+                   String updR = "UPDATE RENTAL_DETAILS SET PaymentMethod = 'Cancelled', RentalStatus = 'Cancelled' WHERE AccountID = ? and VehicleID = ? and RentalStatus = 'Pending Approval'";
                    PreparedStatement updRDetails = conn.prepareStatement(updR);
                    updRDetails.setString(1, accID);                   
                    updRDetails.setString(2, vehicleID);
