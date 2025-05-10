@@ -132,7 +132,7 @@ public class BookingSummary{
 
                     
                     connectToDB();
-                    String getID = "SELECT TOP 1 RentalID FROM RENTAL_DETAILS ORDER BY RentalID DESC";
+                    String getID = "SELECT * FROM RENTAL_DETAILS WHERE CAST(SUBSTRING(RentalID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(RentalID, 2, 10) AS INT)) FROM RENTAL_DETAILS);";
                     PreparedStatement stmt = conn.prepareStatement(getID);
                     ResultSet rs = stmt.executeQuery();
                     if (rs.next()) {

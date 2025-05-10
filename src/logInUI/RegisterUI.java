@@ -177,19 +177,22 @@ public class RegisterUI extends JFrame {
             else if (!nField.getText().matches("\\d{11}")) {
                 JOptionPane.showMessageDialog(null, "Phone number must contain only digits", "Warning", JOptionPane.WARNING_MESSAGE);
             }
+            else if(pField.getText().length() <=8){
+                JOptionPane.showMessageDialog(null, "Password must consist of 8 characters and above.", "Warning", JOptionPane.WARNING_MESSAGE);                
+            }
             else if (!new String(pField.getPassword()).equals(new String(confPField.getPassword()))) {
                 JOptionPane.showMessageDialog(null, "Passwords do not match", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
                     int ans = JOptionPane.showConfirmDialog(this, "Are your details accurate?", "Confirmation", JOptionPane.YES_NO_OPTION);
                     if(ans == JOptionPane.YES_OPTION){
-                        JOptionPane.showMessageDialog(null, "Account Created Successfully!");
+                        
 
                         try{
                         LocalDate localDate = LocalDate.now();
                         Date sqlDate = Date.valueOf(localDate);
                         connectToDB();
                         
-                        String getID = "SELECT TOP 1 AccountID FROM ACCOUNT ORDER BY AccountID DESC";
+                        String getID = "SELECT * FROM ACCOUNT WHERE CAST(SUBSTRING(AccountID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(AccountID, 2, 10) AS INT)) FROM ACCOUNT)";
                         PreparedStatement stmt = conn.prepareStatement(getID);
                         ResultSet rs = stmt.executeQuery();
                         int count=0; 
@@ -215,13 +218,20 @@ public class RegisterUI extends JFrame {
                         stmt.close();
                         p.close();
                         closeConnection();
+                        
+                        JOptionPane.showMessageDialog(null, "Account Created Successfully!");
                         dispose();
                         count = 0;
                         new LogInUI();
                         
                         }
                             catch(SQLException ex){
-                                JOptionPane.showMessageDialog(null, ex.getMessage());
+                                if (ex.getSQLState().equals("23000")) { // eto ung error code for duplication values, sabi sa online
+                                    JOptionPane.showMessageDialog(null, "Email is already used please use another one.");
+                                } 
+                                    else {
+                                        JOptionPane.showMessageDialog(null, "Database error: " + ex.getMessage());
+                                    }   
                             }
                             
                         }

@@ -488,7 +488,7 @@ public class vehicleManagement extends JFrame {
     
         try {
             connectToDB();
-            String queryID = "SELECT TOP 1 VehicleID FROM VEHICLES ORDER BY VehicleID DESC";
+            String queryID = "SELECT * FROM VEHICLES WHERE CAST(SUBSTRING(VehicleID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(VehicleID, 2, 10) AS INT)) FROM VEHICLES)";
             int count = 0;
             
         try (PreparedStatement id = conn.prepareStatement(queryID);

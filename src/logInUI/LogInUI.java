@@ -103,6 +103,10 @@ public class LogInUI extends JFrame {
         logInPanel.add(signUpBtn);
 
         logInBtn.addActionListener(e -> {
+            if(eField.getText().isBlank()){
+                JOptionPane.showMessageDialog(null, "Fields cannot be empty", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             try{
                 connectToDB();
                 String loginQuery = "SELECT AccountID, Email, AccountPassword, AccountRole FROM ACCOUNT WHERE Email = ? ";
@@ -113,23 +117,23 @@ public class LogInUI extends JFrame {
                 
                 if(rs.next()){
                     if(!rs.getString("AccountPassword").equals(pField.getText())){
-                    JOptionPane.showMessageDialog(null, "Incorrect Password");
+                        JOptionPane.showMessageDialog(null, "Incorrect Password", "Warning", JOptionPane.WARNING_MESSAGE);
                     }
                         else{
                             if(rs.getString("AccountRole").equals("Admin")){
-                            dispose();
-                            new vehicleRental();
-                            closeConnection();
+                                dispose();
+                                new vehicleRental();
+                                closeConnection();
                             }
                                 else{
-                                dispose();
-                                new UserLandingPageUI(rs.getString("AccountID"));
-                                closeConnection();
+                                    dispose();
+                                    new UserLandingPageUI(rs.getString("AccountID"));
+                                    closeConnection();
                                 }
                         }
                 }
                     else{
-                    JOptionPane.showMessageDialog(null, "Email not found");
+                    JOptionPane.showMessageDialog(null, "Email not found","Warning", JOptionPane.WARNING_MESSAGE);
                     }
             }
             catch(SQLException e1){
