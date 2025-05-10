@@ -317,7 +317,7 @@ public class manageBookings extends JFrame {
             resetBtn.setBounds(680, 140, 100, 25);
             panel.add(resetBtn);
 
-            String[] attributes = {"RentalID", "VehicleID", "VType",  "VehicleStatus"};
+            String[] attributes = {"VehicleID", "Vehicle Description", "VType",  "VehicleStatus"};
             Object[][] data = fetchStatusData();
             
             DefaultTableModel table = new DefaultTableModel(attributes, 0);
@@ -329,7 +329,7 @@ public class manageBookings extends JFrame {
             scroll.setBounds(70, 190, 750, 300);
             panel.add(scroll);
     
-            JLabel bookingID = new JLabel("Enter Rental ID:");
+            JLabel bookingID = new JLabel("Enter Vehicle ID:");
             bookingID.setBounds(70, 490, 200, 20);
             panel.add(bookingID);
 
@@ -518,17 +518,17 @@ public class manageBookings extends JFrame {
     private Object[][] fetchStatusData() {
         ArrayList<Object[]> vehicleList = new ArrayList<>();
     
-        String query = "SELECT RD.RentalID, V.VehicleID, V.VType, V.VehicleStatus FROM RENTAL_DETAILS RD JOIN VEHICLES V ON RD.VehicleID = V.VehicleID";
+        String query = "SELECT VehicleID, Brand, Model, VType, VehicleStatus FROM VEHICLES WHERE VehicleStatus = 'Under Maintenance'";
     
         try (PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery()) {
         
         while (rs.next()) {
-            String rentalID = rs.getString("RentalID");
             String vehicleID = rs.getString("VehicleID");
+            String vehicleDesc = rs.getString("VehicleID");
             String vType = rs.getString("VType");
             String status = rs.getString("VehicleStatus");
-            vehicleList.add(new Object[]{rentalID, vehicleID, vType, status});
+            vehicleList.add(new Object[]{vehicleID, vehicleDesc, vType, status});
         }
             if (vehicleList.isEmpty()) {
                 System.out.println("No vehicle preparation data found.");
@@ -541,25 +541,24 @@ public class manageBookings extends JFrame {
     return vehicleList.toArray(new Object[0][]);
     }
 
-    private void updatePrepareVehicle(String rentalID, DefaultTableModel table) {
+    private void updatePrepareVehicle(String vehicleID, DefaultTableModel table) {
         
-        if (rentalID.isEmpty()) {
+        if (vehicleID.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid Rental ID.");
             return;
         }
     
-        String getVehicle = "SELECT VehicleID FROM RENTAL_DETAILS WHERE RentalID = ?";
+        String getVehicle = "SELECT VehicleID FROM VEHICLES WHERE VehicleID = ?";
         String updateStatus = "UPDATE VEHICLES SET VehicleStatus = 'Available' WHERE VehicleID = ? AND VehicleStatus = 'Under Maintenance'";
 
         try (
             PreparedStatement get = conn.prepareStatement(getVehicle);
             PreparedStatement update = conn.prepareStatement(updateStatus))
         {
-            get.setString(1, rentalID);
+            get.setString(1, vehicleID);
             ResultSet rs = get.executeQuery();
 
         if (rs.next()) {
-            String vehicleID = rs.getString("VehicleID");
             update.setString(1, vehicleID);
             int rowsUpdated = update.executeUpdate();
 
@@ -573,7 +572,7 @@ public class manageBookings extends JFrame {
              }
         } 
          else {
-            JOptionPane.showMessageDialog(this, "Rental ID not found.");
+            JOptionPane.showMessageDialog(this, "Vehicle ID not found.");
           }
         }    
         catch (SQLException e) {

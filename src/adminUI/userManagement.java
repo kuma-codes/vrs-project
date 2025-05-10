@@ -26,12 +26,14 @@ public class userManagement extends JFrame {
     private JPanel mainPnl;
     private JPanel viewUsersPnl, addUserPnl, removeUserPnl;
     
+    
     // JDBC setup
     private Connection conn;
     private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
     private final String DB_USER = "admin";
     private final String DB_PASS = "admin456";
-    private ArrayList<String> vehicleData = new ArrayList<>();
+    private Object[][] data;
+    
 
     public userManagement() {
         setTitle("User Management");
@@ -131,7 +133,6 @@ public class userManagement extends JFrame {
 
         // View Users Panel
         if (title.equals("View Users")) {
-
             JLabel search = new JLabel("Search:");
             search.setBounds(70, 140, 60, 25);
             panel.add(search);
@@ -157,7 +158,7 @@ public class userManagement extends JFrame {
             panel.add(resetBtn);
 
             String[] attributes = {"AccountID", "FirstName", "Surname", "DriverLicenseNo", "Email", "DateCreated", "Role", "Status"};
-            Object[][] data = fetchUserData();
+            data = fetchUserData();
                     
             DefaultTableModel table = new DefaultTableModel(data, attributes);
             JTable userTab = new JTable(table);
@@ -218,7 +219,7 @@ public class userManagement extends JFrame {
             panel.add(resetBtn);
 
             String[] attributes = {"AccountID", "FirstName", "Surname", "DriverLicenseNo", "Email", "DateCreated", "Role", "Status"};
-            Object[][] data = fetchUserData();
+            data = fetchUserData();
 
             DefaultTableModel table = new DefaultTableModel(data, attributes);
             JTable userTab = new JTable(table);
@@ -245,7 +246,7 @@ public class userManagement extends JFrame {
             back.setBounds(720, 530, 100, 40);
             panel.add(back);
 
-            removeUserFltr(data, table, " ", "All");
+            removeUserFltr(data, table, "", "All");
 
             searchBtn.addActionListener(e -> {
                 String keyword = searchFld.getText().toLowerCase();
@@ -254,9 +255,9 @@ public class userManagement extends JFrame {
             });
 
             resetBtn.addActionListener(e -> {
-                searchFld.setText(" ");
+                searchFld.setText("");
                 roleBox.setSelectedIndex(0);
-                removeUserFltr(data, table, " ", "All");
+                removeUserFltr(data, table, "", "All");
             });
             
             removeUserBtn.addActionListener(e -> {
@@ -276,7 +277,7 @@ public class userManagement extends JFrame {
     private void viewUserFltr(DefaultTableModel vModel, String keyword, String roleFltr) {
         vModel.setRowCount(0);  
         keyword = keyword.toLowerCase();
-        Object[][] data = fetchUserData();
+        data = fetchUserData();
 
         for (Object[] row : data) {
             String combined = String.join(" ", row[0].toString(), row[1].toString(), row[2].toString(), row[3].toString(), 
@@ -337,7 +338,7 @@ public class userManagement extends JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a User ID.");
             return;
         }
-            
+           
         
         
         try {
@@ -347,12 +348,13 @@ public class userManagement extends JFrame {
             ResultSet rs = checkUser.executeQuery();
             if(rs.next()){
                 status = rs.getString("AccountStatus");
-            }
-            
-            if (!status.equals("Not Renting")){
+                if (!status.equals("Not Renting")){
                 JOptionPane.showMessageDialog(this, "Account is currently on transaction, cannot remove.");
                 return;
             }
+            }
+            
+
             
             String query = "DELETE FROM RENTAL_DETAILS WHERE AccountID = ? "
                     + "DELETE FROM ACCOUNT WHERE AccountID = ? ";
@@ -364,8 +366,9 @@ public class userManagement extends JFrame {
 
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(this, "User successfully removed.");
-                Object[][] updatedData = fetchUserData();
-                removeUserFltr(updatedData, model, " ", "All");
+                data = fetchUserData();
+                
+                removeUserFltr(data, model, "", "All");
             } 
                 else {
                     JOptionPane.showMessageDialog(this, "User ID not found.");
@@ -381,6 +384,20 @@ public class userManagement extends JFrame {
         add(newPnl);
         revalidate();
         repaint();
+            
+        if (newPnl == viewUsersPnl) {
+            
+            for (java.awt.Component c : newPnl.getComponents()) {
+                if (c instanceof JScrollPane) {
+                    JScrollPane scroll = (JScrollPane) c;
+                    if (scroll.getViewport().getView() instanceof JTable) {
+                        JTable table = (JTable) scroll.getViewport().getView();
+                        DefaultTableModel model = (DefaultTableModel) table.getModel();
+                        viewUserFltr(model, "", "All"); // Refresh the table data
+                    }
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
