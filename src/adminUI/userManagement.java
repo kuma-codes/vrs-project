@@ -25,6 +25,7 @@ public class userManagement extends JFrame {
 
     private JPanel mainPnl;
     private JPanel viewUsersPnl, addUserPnl, removeUserPnl;
+   
     
     
     // JDBC setup
@@ -33,6 +34,7 @@ public class userManagement extends JFrame {
     private final String DB_USER = "admin";
     private final String DB_PASS = "admin456";
     private Object[][] data;
+    private boolean dbUpdated = false;
     
 
     public userManagement() {
@@ -187,7 +189,17 @@ public class userManagement extends JFrame {
                 viewUserFltr(table, "", "All");
             });
 
-            back.addActionListener(e -> switchPnl(mainPnl));
+            back.addActionListener(e -> {
+                if(dbUpdated){
+                    JOptionPane.showMessageDialog(panel, "Database updated, changes we're made.");
+                    dispose();
+                    new userManagement();
+                    dbUpdated = false;
+                }
+                    else{
+                        switchPnl(mainPnl);
+                    }            
+            });
     }
         
 
@@ -265,7 +277,17 @@ public class userManagement extends JFrame {
                 removeUser(userId, table);
             });
 
-            back.addActionListener(e -> switchPnl(mainPnl));
+            back.addActionListener(e -> {
+            if(dbUpdated){
+                    JOptionPane.showMessageDialog(panel, "Database updated, changes we're made.");
+                    dispose();
+                    new userManagement();
+                    dbUpdated = false;
+                }
+                    else{
+                        switchPnl(mainPnl);
+                    }
+            });
     }
 
 
@@ -367,7 +389,7 @@ public class userManagement extends JFrame {
             if (rowsAffected > 0) {
                 JOptionPane.showMessageDialog(this, "User successfully removed.");
                 data = fetchUserData();
-                
+                dbUpdated = true;
                 removeUserFltr(data, model, "", "All");
             } 
                 else {
@@ -385,19 +407,6 @@ public class userManagement extends JFrame {
         revalidate();
         repaint();
             
-        if (newPnl == viewUsersPnl) {
-            
-            for (java.awt.Component c : newPnl.getComponents()) {
-                if (c instanceof JScrollPane) {
-                    JScrollPane scroll = (JScrollPane) c;
-                    if (scroll.getViewport().getView() instanceof JTable) {
-                        JTable table = (JTable) scroll.getViewport().getView();
-                        DefaultTableModel model = (DefaultTableModel) table.getModel();
-                        viewUserFltr(model, "", "All"); // Refresh the table data
-                    }
-                }
-            }
-        }
     }
 
     public static void main(String[] args) {

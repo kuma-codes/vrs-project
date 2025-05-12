@@ -1,3 +1,4 @@
+
 package userUI;
 
 import logInUI.LogInUI;
@@ -10,14 +11,40 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import java.sql.*;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
 
 public class UserLandingPageUI extends JFrame {
 
     //fonts and colors used that has rgb values
-    private static final Font F1 = new Font("Arial", Font.BOLD, 35);
+    private static final Font F1 = new Font("Arial", Font.BOLD, 40);
     private static final Font F2 = new Font("Arial", Font.BOLD, 20);
-    private static final Font F3 = new Font("Arial", Font.BOLD, 14);
+    private static final Font F3 = new Font("Arial", Font.BOLD, 16);
+    private static final Font F4 = new Font("Arial", Font.BOLD, 16);
+    private static final Font F5 = new Font("Arial", Font.BOLD, 13); 
+    
+    /* Fonts
+    private static final Font F1 = new Font("Arial", Font.BOLD, 18);
+    private static final Font F2 = new Font("Arial", Font.BOLD, 35);
+    private static final Font F3 = new Font("Arial", Font.BOLD, 40);
+    private static final Font F4 = new Font("Arial", Font.BOLD, 13); */
+    
+    //Colors
+    private static final Color fontColor = Color.WHITE;
+    private static final Color shadowColor = new Color(143,143,143);
+    private static final Color shadowColor1 = new Color(148,159,163);
+    private static final Color fldBGColor = new Color(240, 240, 240);
+    private static final Color btnBGColor = new Color(92,142,175);
+    
+    //Border
+    private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border bevelBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+    private static final Border Border = new CompoundBorder(lineBorder,bevelBorder);
     
     // JDBC setup
     private Connection conn;
@@ -25,9 +52,6 @@ public class UserLandingPageUI extends JFrame {
     private static final String DB_USER = "admin";
     private static final String DB_PASS = "admin456";
     private String accID;
-    
-
-
     
     public UserLandingPageUI(String AId){
         this.accID = AId;
@@ -45,60 +69,117 @@ public class UserLandingPageUI extends JFrame {
         pan.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(new Color(100, 149, 237)); 
-        line1.setBounds(80, 0, 30, 640);
+        line1.setBackground(new Color(132, 168, 230));
+        line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(new Color(100, 149, 237)); 
+        line2.setBackground(new Color(132, 168, 230));
         line2.setBounds(150, 0, 30, 640);
         
+        LineBorder thickness = new LineBorder(fontColor,3);
+        LineBorder thickness1 = new LineBorder(shadowColor1,3);
         
-        JLabel pageName = new JLabel();
-        pageName.setForeground(new Color (39, 58, 87));
-        pageName.setFont(F2);
-        pageName.setBounds(40, 100, 360, 30);
+        TitledBorder border1 = BorderFactory.createTitledBorder(thickness,"");
+        border1.setTitle(" HOME PAGE - ");
+        border1.setTitleFont(F2);
+        border1.setTitleColor(fontColor);
+        border1.setTitlePosition(TitledBorder.TOP);
+        border1.setTitleJustification(TitledBorder.LEFT);
+        
+        TitledBorder border2 = BorderFactory.createTitledBorder(thickness1,"");
+        border2.setTitle(" HOME PAGE - ");
+        border2.setTitleFont(F2);
+        border2.setTitleColor(shadowColor1);
+        border2.setTitlePosition(TitledBorder.TOP);
+        border2.setTitleJustification(TitledBorder.LEFT);
+        
+        JPanel pagePanel = new JPanel();
+        pagePanel.setOpaque(false);
+        pagePanel.setBounds(120, 110, 640, 160);
+        pagePanel.setBorder(border1);
+        
+        JPanel pagePanel1 = new JPanel();
+        pagePanel1.setOpaque(false);
+        pagePanel1.setBounds(122, 112, 640, 160);
+        pagePanel1.setBorder(border2);
+        
+        pan.add(pagePanel);
+        pan.add(pagePanel1);
         
         JLabel l1 = new JLabel();
-        l1.setForeground(new Color (39, 58, 87));
+        l1.setForeground(fontColor);
         l1.setFont(F3);
-        l1.setBounds(90, 140, 360, 30);
+        l1.setBounds(200, 150, 360, 30);
+        
+        JLabel ls1 = new JLabel();
+        ls1.setForeground(shadowColor1);
+        ls1.setFont(F3);
+        ls1.setBounds(202, 152, 360, 30);
         
         JLabel l2 = new JLabel();
-        l2.setForeground(new Color (39, 58, 87));
+        l2.setForeground(fontColor);
         l2.setFont(F3);
-        l2.setBounds(90, 170, 360, 30);
+        l2.setBounds(200, 180, 360, 30);
+        
+        JLabel ls2 = new JLabel();
+        ls2.setForeground(shadowColor1);
+        ls2.setFont(F3);
+        ls2.setBounds(202, 182, 360, 30);
         
         JLabel l3 = new JLabel();
-        l3.setForeground(new Color (39, 58, 87));
+        l3.setForeground(fontColor);
         l3.setFont(F3);
-        l3.setBounds(90, 200, 360, 30);
+        l3.setBounds(200, 210, 360, 30);
+        
+        JLabel ls3 = new JLabel();
+        ls3.setForeground(shadowColor1);
+        ls3.setFont(F3);
+        ls3.setBounds(202, 212, 360, 30);
         
         JButton logOutBtn = new JButton("Log Out");
-        logOutBtn.setBounds(730,550,85, 25);
+        logOutBtn.setBounds(715, 555, 85, 30);
+        logOutBtn.setForeground(fontColor);
+        logOutBtn.setFont(F5);
+        logOutBtn.setBackground(btnBGColor);
+        logOutBtn.setBorder(Border);
 
-        JPanel selection = new JPanel(new GridLayout(5,0,30,15));
+        JPanel selection = new JPanel(new GridLayout(5,0,30,10));
         selection.setOpaque(false);
         
         JLabel menuLabel = new JLabel("Vehicle Management Menu",SwingConstants.CENTER);
-        menuLabel.setForeground(new Color (39, 58, 87));
+        menuLabel.setForeground(fontColor);
         menuLabel.setFont(F1);
-        menuLabel.setBounds(0, 40, 900, 33);
+        menuLabel.setBounds(-10, 35, 900, 50);
         
-        JButton viewVehicleBtn = new JButton("Show Vehicle Available");
-        viewVehicleBtn.setFont(F3);
-
-
-        JButton rentVehicleBtn = new JButton("Rent A Vehicle");
-        rentVehicleBtn.setFont(F3);
-
-
+        JLabel menuLS = new JLabel("Vehicle Management Menu",SwingConstants.CENTER);
+        menuLS.setForeground(shadowColor);
+        menuLS.setFont(F1);
+        menuLS.setBounds(-7, 38, 900, 50);
         
-        JButton returnVehicleBtn = new JButton("Return Vehicle");
-        returnVehicleBtn.setFont(F3);
+        JButton viewVehicleBtn = new JButton("SHOW VEHICLE AVAILABLE");
+        viewVehicleBtn.setBounds(100, 340, 680, 50);
+        viewVehicleBtn.setForeground(fontColor);
+        viewVehicleBtn.setFont(F4);
+        viewVehicleBtn.setBackground(btnBGColor);
+        viewVehicleBtn.setBorder(Border);
 
-        
-        JButton rentStatusBtn = new JButton("Show Booking Status");
-        rentStatusBtn.setFont(F3);
+        JButton rentVehicleBtn = new JButton("RENT A VEHICLE");
+        rentVehicleBtn.setForeground(fontColor);
+        rentVehicleBtn.setFont(F4);
+        rentVehicleBtn.setBackground(btnBGColor);
+        rentVehicleBtn.setBorder(Border);
+
+        JButton returnVehicleBtn = new JButton("RETURN VEHICLE");
+        returnVehicleBtn.setForeground(fontColor);
+        returnVehicleBtn.setFont(F4);
+        returnVehicleBtn.setBackground(btnBGColor);
+        returnVehicleBtn.setBorder(Border);
+
+        JButton rentStatusBtn = new JButton("SHOW BOOKING STATUS");
+        rentStatusBtn.setForeground(fontColor);
+        rentStatusBtn.setFont(F4);
+        rentStatusBtn.setBackground(btnBGColor);
+        rentStatusBtn.setBorder(Border);
         
         try{
                 connectToDB();
@@ -108,7 +189,8 @@ public class UserLandingPageUI extends JFrame {
                 ResultSet rs = p.executeQuery();
                 
                 if(rs.next()){
-                pageName.setText("HOME PAGE - " + rs.getString("FName"));
+                border1.setTitle(" HOME PAGE - " + rs.getString("FName") +" ");
+                border2.setTitle(" HOME PAGE - " + rs.getString("FName") +" ");
                 l1.setText("Welcome, " +rs.getString("FName") +" "+rs.getString("LName")+ "!");
                 l2.setText("Account Status: " + rs.getString("AccountStatus"));
                 l3.setText("Account Created at " + rs.getDate("DateCreated") );
@@ -121,15 +203,12 @@ public class UserLandingPageUI extends JFrame {
         
         }
 
-        
-        
         selection.add(viewVehicleBtn);       
         selection.add(rentVehicleBtn);
         selection.add(returnVehicleBtn);
         selection.add(rentStatusBtn);
-        selection.setBounds(45,280,770,300);
+        selection.setBounds(80,295,720,300);
 
-        
         //ActionListeners
         viewVehicleBtn.addActionListener(e -> goToViewVehicle());
         rentVehicleBtn.addActionListener(e -> goToRentVehicle());
@@ -138,10 +217,13 @@ public class UserLandingPageUI extends JFrame {
         logOutBtn.addActionListener(e -> logOut());
         
         pan.add(menuLabel);
-        pan.add(pageName);
+        pan.add(menuLS);
         pan.add(l1);
+        pan.add(ls1);
         pan.add(l2);
-        pan.add(l3);        
+        pan.add(ls2);
+        pan.add(l3);
+        pan.add(ls3);        
         pan.add(selection);
         pan.add(logOutBtn);
         pan.add(line1);
@@ -173,31 +255,26 @@ public class UserLandingPageUI extends JFrame {
         new LogInUI();
         }
     }
-    
-    
-     private void connectToDB(){
-        try {
-        conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
-        }
-            catch(SQLException e){
-            e.printStackTrace();
-            }
-     }
 
-     private void closeConnection(){
-        try
-        {
-        conn.close();
-        }
-            catch(SQLException e){
-            e.printStackTrace();
-            }
-     }
-    
-    
-    
+    private void connectToDB(){
+       try {
+       conn = DriverManager.getConnection(DB_URL,DB_USER,DB_PASS);
+       }
+           catch(SQLException e){
+           e.printStackTrace();
+           }
+    }
+
+    private void closeConnection(){
+       try
+       {
+       conn.close();
+       }
+           catch(SQLException e){
+           e.printStackTrace();
+           }
+    }
 }
-
 
 class runner{
     public static void main(String[] args) {

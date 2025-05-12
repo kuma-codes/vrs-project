@@ -192,7 +192,7 @@ public class RegisterUI extends JFrame {
                         Date sqlDate = Date.valueOf(localDate);
                         connectToDB();
                         
-                        String getID = "SELECT * FROM ACCOUNT WHERE CAST(SUBSTRING(AccountID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(AccountID, 2, 10) AS INT)) FROM ACCOUNT)";
+                        String getID = "SELECT * FROM RENTAL_DETAILS WHERE CAST(SUBSTRING(RentalID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(RentalID, 2, 10) AS INT)) FROM RENTAL_DETAILS);";
                         PreparedStatement stmt = conn.prepareStatement(getID);
                         ResultSet rs = stmt.executeQuery();
                         int count=0; 

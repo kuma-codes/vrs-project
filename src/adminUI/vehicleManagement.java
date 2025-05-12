@@ -35,6 +35,7 @@ public class vehicleManagement extends JFrame {
     private final String DB_USER = "admin";
     private final String DB_PASS = "admin456";
     private ArrayList<String> vehicleData = new ArrayList<>();
+    private boolean dbUpdated  = false;
     
     public vehicleManagement() {
         setTitle("Vehicle Management");
@@ -223,7 +224,17 @@ public class vehicleManagement extends JFrame {
             add.addActionListener(e -> addNewVehicle
                 (vehiclesBox, brandFld, modelFld, colorFld, licenseFld, priceFld, statusBox, panel));
 
-            back.addActionListener(e -> switchPnl(mainPnl));
+            back.addActionListener(e -> {
+                    if(dbUpdated){
+                    JOptionPane.showMessageDialog(panel, "Database updated, changes we're made.");
+                    dispose();
+                    new vehicleManagement();
+                    dbUpdated = false;
+                }
+                    else{
+                        switchPnl(mainPnl);
+                    }
+            });
         }
 
         else if (title.equals("Modify Vehicle")) {
@@ -308,7 +319,17 @@ public class vehicleManagement extends JFrame {
                                                             colorFld,licenseFld,priceFld,statusBox,panel);
             });
             
-            back.addActionListener(e -> switchPnl(mainPnl));
+            back.addActionListener(e -> {
+                if(dbUpdated){
+                    JOptionPane.showMessageDialog(panel, "Database updated, changes we're made.");
+                    dispose();
+                    new vehicleManagement();
+                    dbUpdated = false;
+                }
+                    else{
+                        switchPnl(mainPnl);
+                    }
+            });
         }
 
         // Remove Vehicle Panel
@@ -326,7 +347,11 @@ public class vehicleManagement extends JFrame {
             vehicleType.setBounds(350, 140, 40, 25);
             panel.add(vehicleType);
 
-            JComboBox <String> vehicleTypeBox = new JComboBox<>(new String[]{"All", "Car", "Motorcycle"});
+            JComboBox <String> vehicleTypeBox = new JComboBox<>(new String[]{"All"});
+            for (String type : fetchDistinctColumnValues("VType")) {
+                vehicleTypeBox.addItem(type);
+            }
+            
             vehicleTypeBox.setBounds(390, 140, 150, 25);
             panel.add(vehicleTypeBox);
 
@@ -385,7 +410,17 @@ public class vehicleManagement extends JFrame {
                 deleteVehicle(vehicleID, panel, vehicleTab);
             });
             
-            back.addActionListener(e -> switchPnl(mainPnl));
+            back.addActionListener(e -> {
+                if(dbUpdated){
+                    JOptionPane.showMessageDialog(panel, "Database updated, changes we're made.");
+                    dispose();
+                    new vehicleManagement();
+                    dbUpdated = false;
+                }
+                    else{
+                        switchPnl(mainPnl);
+                    }
+            });
     }
 
         // Scheduling Panel
@@ -451,7 +486,17 @@ public class vehicleManagement extends JFrame {
             
             apply.addActionListener(e -> fetchAvailableVehicle(vehicleIdFld, pickStart, pickEnd, descFld));
 
-            back.addActionListener(e -> switchPnl(mainPnl));
+            back.addActionListener(e -> {
+                if(dbUpdated){
+                    JOptionPane.showMessageDialog(panel, "Database updated, changes we're made.");
+                    dispose();
+                    new vehicleManagement();
+                    dbUpdated = false;
+                }
+                    else{
+                        switchPnl(mainPnl);
+                    }
+            });
     }
         panel.add(line1);
         panel.add(line2);
@@ -519,7 +564,8 @@ public class vehicleManagement extends JFrame {
             
                 if (rowsInserted > 0) {
                     JOptionPane.showMessageDialog(panel, "Vehicle added successfully.");
-                    switchPnl(mainPnl);
+                    dbUpdated = true;
+                    
                 } 
                 else {
                     JOptionPane.showMessageDialog(panel, "Failed to add vehicle.");
@@ -580,7 +626,7 @@ public class vehicleManagement extends JFrame {
         int rows = stmt.executeUpdate();
             if (rows > 0) {
                 JOptionPane.showMessageDialog(panel, "Vehicle updated successfully.");
-                switchPnl(mainPnl);
+                dbUpdated = true;
             } 
               else {
                 JOptionPane.showMessageDialog(panel, "Vehicle update failed or vehicle not found.");
@@ -645,6 +691,7 @@ public class vehicleManagement extends JFrame {
 
                 if (rows > 0) {
                     JOptionPane.showMessageDialog(pnl, "Vehicle removed successfully.");
+                    dbUpdated = true;
                     Object[][] updatedData = fetchVehicleData();
                     DefaultTableModel model = (DefaultTableModel) deleteTab.getModel();
                     removeVehicleFltr(updatedData, model, "", "All");
@@ -664,6 +711,25 @@ public class vehicleManagement extends JFrame {
             catch (SQLException e) {
                 JOptionPane.showMessageDialog(pnl, "Database error: " + e.getMessage());
             }
+    }
+    
+    private ArrayList<String> fetchDistinctColumnValues(String columnName) {
+        connectToDB();
+        ArrayList<String> values = new ArrayList<>();
+        String query = "SELECT DISTINCT " + columnName + " FROM VEHICLES ORDER BY " + columnName;
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String val = rs.getString(columnName);
+                if (val != null && !val.trim().isEmpty()) {
+                    values.add(val);
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading filter values: " + e.getMessage());
+        }
+        closeConnection();
+        return values;
     }
     
     private Object[][] fetchVehicleData() {
@@ -727,6 +793,7 @@ public class vehicleManagement extends JFrame {
                     vehicleTab.setModel(model); 
 
                     JOptionPane.showMessageDialog(null, "Maintenance record added and table updated.");
+                    dbUpdated = true;
                 } 
                     else {
                         JOptionPane.showMessageDialog(null, "Failed to add maintenance record.");

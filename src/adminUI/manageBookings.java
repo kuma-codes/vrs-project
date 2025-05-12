@@ -18,9 +18,6 @@ import javax.swing.JOptionPane;
 
 public class manageBookings extends JFrame {
 
-    private static final Font fontA = new Font("Arial", Font.BOLD, 18);
-    private static final Font fontB = new Font("Arial", Font.BOLD, 14);
-    private static final Color lblue = new Color(135, 206, 235);
     private static final Color dblue = new Color(100, 149, 237);
 
     private JPanel mainPnl;
@@ -154,7 +151,7 @@ public class manageBookings extends JFrame {
             status.setBounds(350, 140, 50, 25);
             panel.add(status);
 
-            JComboBox <String> statusBox = new JComboBox<>(new String[]{"All", "Approved", "Pending Approval", "Completed"});
+            JComboBox <String> statusBox = new JComboBox<>(new String[]{"All","Completed", "Not Yet Returned", "Pending Approval", "Cancelled"});
             statusBox.setBounds(410, 140, 150, 25);
             panel.add(statusBox);
 
@@ -166,7 +163,7 @@ public class manageBookings extends JFrame {
             reset.setBounds(680, 140, 100, 25);
             panel.add(reset);
 
-            String[] attributes = {"RentalID", "AccountID", "Vehicle ID", "ReturnDate", "RentalStatus"};
+            String[] attributes = {"RentalID", "Account Details", "Vehicle Details", "ReturnDate", "RentalStatus"};
 
             /* sample lang
             pending - booking req has been made but have not yet reviewed/confirmed by admin
@@ -213,16 +210,8 @@ public class manageBookings extends JFrame {
             panel.add(search);
             
             JTextField searchFld = new JTextField();
-            searchFld.setBounds(130, 140, 200, 25);
+            searchFld.setBounds(130, 140, 420, 25);
             panel.add(searchFld);
-
-            JLabel status = new JLabel("Status:");
-            status.setBounds(350, 140, 50, 25);
-            panel.add(status);
-
-            JComboBox <String> statusBox = new JComboBox<>(new String[]{"All", "Pending Approval", "Approved"});
-            statusBox.setBounds(410, 140, 150, 25);
-            panel.add(statusBox);
 
             JButton searchBtn = new JButton("Search");
             searchBtn.setBounds(570, 140, 100, 25);
@@ -232,7 +221,7 @@ public class manageBookings extends JFrame {
             resetBtn.setBounds(680, 140, 100, 25);
             panel.add(resetBtn);
 
-            String[] attributes = {"RentalID", "VehicleID", "RentalStatus"};
+            String[] attributes = {"RentalID","AccountID", "VehicleID", "RentalStatus"};
             Object[][] fullData  = fetchBookingData();
             Object[][] data = approveBookingFltr(fullData);
 
@@ -261,7 +250,7 @@ public class manageBookings extends JFrame {
             back.setBounds(720, 530, 100, 40);
             panel.add(back);
             
-            adjustVehicleFltr(data, table, " ", "All", 2);
+            adjustVehicleFltr(data, table, "", "All", 2);
             
             approveBtn.addActionListener(e -> {
                 String rentalID = bookingFld.getText();
@@ -271,15 +260,13 @@ public class manageBookings extends JFrame {
             
             searchBtn.addActionListener(e -> {
                 String keyword = searchFld.getText().toLowerCase();
-                String statuses = statusBox.getSelectedItem().toString();
 
                 Object[][] refreshedData = approveBookingFltr(fetchBookingData());
-                adjustVehicleFltr(refreshedData, table, keyword, statuses, 2);
+                adjustVehicleFltr(refreshedData, table, keyword, "All", 2);
             });
 
             resetBtn.addActionListener(e -> {
-                searchFld.setText(" ");
-                statusBox.setSelectedIndex(0);
+                searchFld.setText("");
 
                 Object[][] refreshedData = approveBookingFltr(fetchBookingData());
                 adjustVehicleFltr(refreshedData, table, " ", "All", 2);
@@ -301,13 +288,16 @@ public class manageBookings extends JFrame {
             searchFld.setBounds(130, 140, 200, 25);
             panel.add(searchFld);
 
-            JLabel statusLbl = new JLabel("Status:");
+            JLabel statusLbl = new JLabel("Type:");
             statusLbl.setBounds(350, 140, 50, 25);
             panel.add(statusLbl);
 
-            JComboBox <String> statusBox = new JComboBox<>(new String[]{"All", "Available", "Rented", "Under Maintenance"});
-            statusBox.setBounds(410, 140, 150, 25);
-            panel.add(statusBox); 
+            JComboBox <String> typeCBox = new JComboBox<>(new String[]{"All"});
+            typeCBox.setBounds(410, 140, 150, 25);
+            panel.add(typeCBox); 
+            for (String type : fetchDistinctColumnValues("VType")) {
+            typeCBox.addItem(type);
+            }
 
             JButton searchBtn = new JButton("Search");
             searchBtn.setBounds(570, 140, 100, 25);
@@ -345,7 +335,7 @@ public class manageBookings extends JFrame {
             back.setBounds(730, 510, 100, 30);
             panel.add(back);
 
-            adjustVehicleFltr(data, table, " ", "All", 3);
+            adjustVehicleFltr(data, table, " ", "All", 2);
             
             prepareBtn.addActionListener(e -> {
                 String rentalID = bookingFld.getText().trim();
@@ -355,14 +345,14 @@ public class manageBookings extends JFrame {
     
             searchBtn.addActionListener(e -> {
                 String keyword = searchFld.getText().toLowerCase();
-                String statuses = statusBox.getSelectedItem().toString();
-                adjustVehicleFltr(data, table, keyword, statuses, 3);
+                String statuses = typeCBox.getSelectedItem().toString();
+                adjustVehicleFltr(data, table, keyword, statuses, 2);
             });
 
             resetBtn.addActionListener(e -> {
                 searchFld.setText(" ");
-                statusBox.setSelectedIndex(0);
-                adjustVehicleFltr(data, table, " ", "All", 3);
+                typeCBox.setSelectedIndex(0);
+                adjustVehicleFltr(data, table, " ", "All", 2);
             });
 
             back.addActionListener(e -> switchPnl(mainPnl));
@@ -394,6 +384,24 @@ public class manageBookings extends JFrame {
       }
     }
 
+    private ArrayList<String> fetchDistinctColumnValues(String columnName) {
+        ArrayList<String> values = new ArrayList<>();
+        String query = "SELECT DISTINCT " + columnName + " FROM VEHICLES ORDER BY " + columnName;
+        try (PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String val = rs.getString(columnName);
+                if (val != null && !val.trim().isEmpty()) {
+                    values.add(val);
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading filter values: " + e.getMessage());
+        }
+        return values;
+    }
+    
+    
     private void adjustVehicleFltr(Object[][] data, DefaultTableModel vModel, String keyword, String statusFltr, int status) {
         vModel.setRowCount(0); 
         for (Object[] row : data) {
@@ -402,7 +410,6 @@ public class manageBookings extends JFrame {
             for (Object item : row) {
                 rowStr.append(item.toString().toLowerCase()).append(" ");
             }
-
         boolean keywordMatch = rowStr.toString().contains(keyword.toLowerCase());
         boolean statusMatch = statusFltr.equalsIgnoreCase("All") ||
                               row[status].toString().equalsIgnoreCase(statusFltr);
@@ -419,10 +426,9 @@ public class manageBookings extends JFrame {
         for (Object[] row : fData) {
             String status = row[4].toString();
 
-            if (status.equalsIgnoreCase("Pending Approval") || 
-                status.equalsIgnoreCase("Approved")) {
+            if (status.equalsIgnoreCase("Pending Approval")) {
 
-                filter.add(new Object[]{row[0], row[2], row[4]});
+                filter.add(new Object[]{row[0], row[1], row[2], row[4]});
             }
         }
         return filter.toArray(new Object[0][]);
@@ -432,7 +438,7 @@ public class manageBookings extends JFrame {
     private Object[][] fetchBookingData() {
         ArrayList<Object[]> bookings = new ArrayList<>();
 
-        String query = "SELECT RD.RentalID, A.AccountID, V.VehicleID, RD.ReturnDate, RD.RentalStatus " +
+        String query = "SELECT RD.RentalID, A.AccountID, A.FName, A.LName , V.VehicleID,V.Model,V.Brand,  RD.ReturnDate, RD.RentalStatus " +
                        "FROM RENTAL_DETAILS RD " +
                        "JOIN ACCOUNT A ON RD.AccountID = A.AccountID " +
                        "JOIN VEHICLES V ON RD.VehicleID = V.VehicleID";
@@ -442,8 +448,8 @@ public class manageBookings extends JFrame {
 
                 while (rs.next()) {
                     String rentalID = rs.getString("RentalID");
-                    String accountID = rs.getString("AccountID");
-                    String vehicleID = rs.getString("VehicleID");
+                    String accountID = rs.getString("AccountID") + " - " + rs.getString("FName") + " " +rs.getString("LName");
+                    String vehicleID = rs.getString("VehicleID") + " - " + rs.getString("Brand") + " " +rs.getString("Model");
                     String date = rs.getString("ReturnDate");
                     String status = rs.getString("RentalStatus");
                     bookings.add(new Object[]{rentalID, accountID, vehicleID, date, status});
@@ -525,7 +531,7 @@ public class manageBookings extends JFrame {
         
         while (rs.next()) {
             String vehicleID = rs.getString("VehicleID");
-            String vehicleDesc = rs.getString("VehicleID");
+            String vehicleDesc = rs.getString("Model") + " " + rs.getString("Brand");
             String vType = rs.getString("VType");
             String status = rs.getString("VehicleStatus");
             vehicleList.add(new Object[]{vehicleID, vehicleDesc, vType, status});
