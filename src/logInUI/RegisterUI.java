@@ -177,7 +177,7 @@ public class RegisterUI extends JFrame {
             else if (!nField.getText().matches("\\d{11}")) {
                 JOptionPane.showMessageDialog(null, "Phone number must contain only digits", "Warning", JOptionPane.WARNING_MESSAGE);
             }
-            else if(pField.getText().length() <=8){
+            else if(pField.getText().length() <8){
                 JOptionPane.showMessageDialog(null, "Password must consist of 8 characters and above.", "Warning", JOptionPane.WARNING_MESSAGE);                
             }
             else if (!new String(pField.getPassword()).equals(new String(confPField.getPassword()))) {
@@ -192,18 +192,20 @@ public class RegisterUI extends JFrame {
                         Date sqlDate = Date.valueOf(localDate);
                         connectToDB();
                         
-                        String getID = "SELECT * FROM RENTAL_DETAILS WHERE CAST(SUBSTRING(RentalID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(RentalID, 2, 10) AS INT)) FROM RENTAL_DETAILS);";
+                        String getID = "SELECT * FROM ACCOUNT WHERE CAST(SUBSTRING(AccountID, 2, 10) AS INT) = (SELECT MAX(CAST(SUBSTRING(AccountID, 2, 10) AS INT)) FROM ACCOUNT);";
                         PreparedStatement stmt = conn.prepareStatement(getID);
                         ResultSet rs = stmt.executeQuery();
                         int count=0; 
                         if (rs.next()) {
                             String lastID = rs.getString("AccountID"); 
+                            System.out.println(rs.getString("AccountID"));
                             lastID = lastID.substring(1);
                             count = Integer.parseInt(lastID);
                         }
                         
                         String query = "INSERT INTO ACCOUNT VALUES (?,?,?,?,?,?,?,?,?,?)";
                         PreparedStatement p = conn.prepareStatement(query);
+                            System.out.println(count + 1);
                         p.setString(1, "U"+(count +1));
                         p.setString(2,fField.getText().trim());
                         p.setString(3,lField.getText().trim());
@@ -223,7 +225,6 @@ public class RegisterUI extends JFrame {
                         dispose();
                         count = 0;
                         new LogInUI();
-                        
                         }
                             catch(SQLException ex){
                                 if (ex.getSQLState().equals("23000")) { // eto ung error code for duplication values, sabi sa online

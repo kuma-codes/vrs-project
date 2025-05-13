@@ -68,15 +68,20 @@ public class manageBookings extends JFrame {
         JButton prepareVehicle = new JButton("Prepare Vehicle");
         prepareVehicle.setBounds(80, 320, 740, 70);
         prepareVehicle.setFont(new Font("Arial", Font.BOLD, 20));
+        
+        JButton salesReport = new JButton("Sales Report");
+        salesReport.setBounds(80, 410, 740, 70);
+        salesReport.setFont(new Font("Arial", Font.BOLD, 20));
 
         JButton back = new JButton("Back");
-        back.setBounds(80, 410, 740, 70);
+        back.setBounds(80, 500, 740, 70);
         back.setFont(new Font("Arial", Font.BOLD, 20));
 
         mainPnl.add(title);
         mainPnl.add(viewBookings);
         mainPnl.add(approveBooking);
         mainPnl.add(prepareVehicle);
+        mainPnl.add(salesReport);
         mainPnl.add(back);
         mainPnl.add(line1);
         mainPnl.add(line2);
@@ -90,6 +95,7 @@ public class manageBookings extends JFrame {
         viewBookings.addActionListener(e -> switchPnl(viewPnl));
         approveBooking.addActionListener(e -> switchPnl(approvePnl));
         prepareVehicle.addActionListener(e -> switchPnl(preparePnl));
+        salesReport.addActionListener(e -> {dispose(); new salesReport();});
         back.addActionListener(e -> {dispose(); new vehicleRental();});
 
         add(mainPnl);
@@ -241,22 +247,32 @@ public class manageBookings extends JFrame {
             JTextField bookingFld = new JTextField();
             bookingFld.setBounds(70, 510, 280, 30);
             panel.add(bookingFld);
-
+            
+            JButton rejectBtn = new JButton("REJECT");
+            rejectBtn.setBounds(440, 530, 130, 40);
+            panel.add(rejectBtn);
+            
             JButton approveBtn = new JButton("APPROVE");
             approveBtn.setBounds(580, 530, 130, 40);
             panel.add(approveBtn);
-
+            
             JButton back = new JButton("BACK");
             back.setBounds(720, 530, 100, 40);
             panel.add(back);
             
             adjustVehicleFltr(data, table, "", "All", 2);
             
+            rejectBtn.addActionListener(e -> {
+                String rentalID = bookingFld.getText();
+                rejectBooking(rentalID);
+            });
+            
             approveBtn.addActionListener(e -> {
                 String rentalID = bookingFld.getText();
                 approveBooking(rentalID);
 
             });
+            
             
             searchBtn.addActionListener(e -> {
                 String keyword = searchFld.getText().toLowerCase();
@@ -438,10 +454,10 @@ public class manageBookings extends JFrame {
     private Object[][] fetchBookingData() {
         ArrayList<Object[]> bookings = new ArrayList<>();
 
-        String query = "SELECT RD.RentalID, A.AccountID, A.FName, A.LName , V.VehicleID,V.Model,V.Brand,  RD.ReturnDate, RD.RentalStatus " +
+        String query = "SELECT RD.RentalID, A.AccountID, A.FName, A.LName , V.VehicleID,V.Model,V.Brand,  RD.ReturnDate, RD.RentalStatus, CAST(SUBSTRING(RD.RentalID, 2, 10) AS INT) AS NumericID " +
                        "FROM RENTAL_DETAILS RD " +
                        "JOIN ACCOUNT A ON RD.AccountID = A.AccountID " +
-                       "JOIN VEHICLES V ON RD.VehicleID = V.VehicleID";
+                       "JOIN VEHICLES V ON RD.VehicleID = V.VehicleID ORDER BY NumericID";
 
             try (PreparedStatement stmt = conn.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
@@ -463,7 +479,63 @@ public class manageBookings extends JFrame {
             }
         return bookings.toArray(new Object[0][]);
     }
+    private void rejectBooking(String RentalID) {
+        
+        if (RentalID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid Booking ID.");
+            return;
+        }
 
+        String getDetails = "SELECT RD.RentalID, A.AccountID, V.VehicleID, RD.RentalStatus " +
+                            "FROM RENTAL_DETAILS RD " +
+                            "JOIN VEHICLES V ON RD.VehicleID = V.VehicleID " +
+                            "JOIN ACCOUNT A ON RD.AccountID = A.AccountID WHERE RD.RentalID = ?";
+    
+        //update the status after approving
+        String updateAccountStatus = "UPDATE ACCOUNT SET AccountStatus = 'Not Renting' WHERE AccountID = ?";
+        String updateVehicleStatus = "UPDATE VEHICLES SET VehicleStatus = 'Available' WHERE VehicleID = ?";
+        String updateRentalStatus = "UPDATE RENTAL_DETAILS SET RentalStatus = 'Rejected' WHERE RentalID = ? AND RentalStatus = 'Pending Approval'";
+
+        try (
+            PreparedStatement getStmt = conn.prepareStatement(getDetails);
+            PreparedStatement accountStmt = conn.prepareStatement(updateAccountStatus);
+            PreparedStatement vehicleStmt = conn.prepareStatement(updateVehicleStatus);
+            PreparedStatement rentalStmt = conn.prepareStatement(updateRentalStatus)
+        ) {
+            getStmt.setString(1, RentalID);
+            ResultSet rs = getStmt.executeQuery();
+
+            if (rs.next()) {
+                String accID = rs.getString("AccountID");
+                String vehicleID = rs.getString("VehicleID");
+
+                accountStmt.setString(1, accID);
+                accountStmt.executeUpdate();
+
+            vehicleStmt.setString(1, vehicleID);
+            vehicleStmt.executeUpdate();
+
+            rentalStmt.setString(1, RentalID);
+            int updated = rentalStmt.executeUpdate();
+
+                if (updated > 0) {
+                    JOptionPane.showMessageDialog(this, "Booking Rejected and statuses updated.");
+                    dispose();
+                    new manageBookings();
+                } 
+                    else {
+                        JOptionPane.showMessageDialog(this, "Rental ID not found or already rejected.");
+                }
+            } 
+                else {
+                    JOptionPane.showMessageDialog(this, "Rental ID not found.");
+            }
+        } 
+            catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error rejecting booking: " + e.getMessage());
+        }
+    }
+    
     private void approveBooking(String RentalID) {
         
         if (RentalID.isEmpty()) {
@@ -555,17 +627,19 @@ public class manageBookings extends JFrame {
         }
     
         String getVehicle = "SELECT VehicleID FROM VEHICLES WHERE VehicleID = ?";
-        String updateStatus = "UPDATE VEHICLES SET VehicleStatus = 'Available' WHERE VehicleID = ? AND VehicleStatus = 'Under Maintenance'";
+        String updateStatus = "UPDATE VEHICLES SET VehicleStatus = 'Available' WHERE VehicleID = ? AND VehicleStatus = 'Under Maintenance';"
+                            + "UPDATE MAINTENANCE SET MaintenanceStatus = 'Completed' WHERE VehicleID = ? and MaintenanceStatus = 'Scheduled'";
 
         try (
             PreparedStatement get = conn.prepareStatement(getVehicle);
             PreparedStatement update = conn.prepareStatement(updateStatus))
         {
-            get.setString(1, vehicleID);
+            get.setString(1, vehicleID);            
             ResultSet rs = get.executeQuery();
 
         if (rs.next()) {
             update.setString(1, vehicleID);
+            update.setString(2, vehicleID);
             int rowsUpdated = update.executeUpdate();
 
             if (rowsUpdated > 0) {

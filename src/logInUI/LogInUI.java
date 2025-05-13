@@ -86,7 +86,7 @@ public class LogInUI extends JFrame {
         rLabel.setForeground(Color.WHITE);
         rLabel.setBounds(90, 190, 150, 25);
 
-        JButton signUpBtn = new JButton("Sign-In.");
+        JButton signUpBtn = new JButton("Sign-Up.");
         signUpBtn.setFont(F3);
         signUpBtn.setBackground(new Color(135, 206, 235));
         signUpBtn.setForeground(Color.BLACK);
@@ -107,36 +107,46 @@ public class LogInUI extends JFrame {
                 JOptionPane.showMessageDialog(null, "Fields cannot be empty", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            try{
+            try {
                 connectToDB();
-                String loginQuery = "SELECT AccountID, Email, AccountPassword, AccountRole FROM ACCOUNT WHERE Email = ? ";
+
+                // Get account where email matches case-insensitively
+                String loginQuery = "SELECT AccountID, Email, AccountPassword, AccountRole FROM ACCOUNT WHERE Email = ?";
                 PreparedStatement p = conn.prepareStatement(loginQuery);
                 p.setString(1, eField.getText().trim());
-                
+
                 ResultSet rs = p.executeQuery();
-                
-                if(rs.next()){
-                    if(!rs.getString("AccountPassword").equals(pField.getText())){
-                        JOptionPane.showMessageDialog(null, "Incorrect Password", "Warning", JOptionPane.WARNING_MESSAGE);
-                    }
-                        else{
-                            if(rs.getString("AccountRole").equals("Admin")){
+
+                boolean found = false;
+
+                while (rs.next()) {
+                    String dbEmail = rs.getString("Email");
+                    String inputEmail = eField.getText().trim();
+
+                    // Perform case-sensitive check in Java
+                    if (dbEmail.equals(inputEmail)) {
+                        found = true;
+                        if (!rs.getString("AccountPassword").equals(pField.getText())) {
+                            JOptionPane.showMessageDialog(null, "Incorrect Password", "Warning", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            if (rs.getString("AccountRole").equals("Admin")) {
                                 dispose();
                                 new vehicleRental();
                                 closeConnection();
+                            } else {
+                                dispose();
+                                new UserLandingPageUI(rs.getString("AccountID"));
+                                closeConnection();
                             }
-                                else{
-                                    dispose();
-                                    new UserLandingPageUI(rs.getString("AccountID"));
-                                    closeConnection();
-                                }
                         }
-                }
-                    else{
-                    JOptionPane.showMessageDialog(null, "Email not found","Warning", JOptionPane.WARNING_MESSAGE);
+                        break;
                     }
-            }
-            catch(SQLException e1){
+                }
+
+                if (!found) {
+                    JOptionPane.showMessageDialog(null, "Email not found", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (SQLException e1) {
                 JOptionPane.showMessageDialog(null, e1.getMessage());
             }
             

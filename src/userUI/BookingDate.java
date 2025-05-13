@@ -1,11 +1,10 @@
 package userUI;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DatePickerSettings;
-import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
 import java.time.LocalDate;
 
 public class BookingDate 

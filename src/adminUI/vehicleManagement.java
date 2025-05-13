@@ -158,7 +158,19 @@ public class vehicleManagement extends JFrame {
             vehicleType.setBounds(140, 130, 200, 20);
             panel.add(vehicleType);
             
-            String[] vehicles = {"Car", "Motorcycle"}; //type of vehicles
+            String[] vehicles = {
+                "Motorcycle",
+                "SUV",
+                "Sedan",
+                "Coupe",
+                "PickUp",
+                "Van",
+                "Minivan",
+                "Convertible" ,
+                 "Hatchback",
+                "Crossover",
+                "Electric Vehicle"};
+                //type of vehicles
             JComboBox <String> vehiclesBox = new JComboBox<>(vehicles);
             vehiclesBox.setBounds(140, 150, 600, 40);
             panel.add(vehiclesBox);
@@ -208,7 +220,7 @@ public class vehicleManagement extends JFrame {
             status.setBounds(480, 330, 200, 20);
             panel.add(status);
             
-            String[] statuses = {"Available", "Under Maintenance"};
+            String[] statuses = {"Available"};
             JComboBox <String> statusBox = new JComboBox<>(statuses);
             statusBox.setBounds(480, 350, 280, 30);
             panel.add(statusBox);
@@ -251,7 +263,19 @@ public class vehicleManagement extends JFrame {
             vehicleType.setBounds(100, 190, 200, 20);
             panel.add(vehicleType);
             
-            String[] vehicles = {"Car", "Motorcycle", "SUV"}; //type of vehicles
+            String[] vehicles = {                
+                "Motorcycle",
+                "SUV",
+                "Sedan",
+                "Coupe",
+                "PickUp",
+                "Van",
+                "Minivan",
+                "Convertible" ,
+                "Hatchback",
+                "Crossover",
+                "Electric Vehicle"};
+                 //type of vehicles
             JComboBox <String> vehiclesBox = new JComboBox<>(vehicles);
             vehiclesBox.setBounds(100, 210, 200, 30);
             panel.add(vehiclesBox);
@@ -297,14 +321,6 @@ public class vehicleManagement extends JFrame {
             priceFld.setBounds(480, 330, 280, 30);
             panel.add(priceFld);
             
-            JLabel status = new JLabel("Status:");
-            status.setBounds(480, 370, 200, 20);
-            panel.add(status);
-            
-            String[] statuses = {"Available", "Rented", "Under Maintenance"};
-            JComboBox <String> statusBox = new JComboBox<>(statuses);
-            statusBox.setBounds(480, 390, 280, 30);
-            panel.add(statusBox);
 
             JButton updateBtn = new JButton("UPDATE");
             updateBtn.setBounds(300, 460, 100, 40);
@@ -316,7 +332,7 @@ public class vehicleManagement extends JFrame {
             
             updateBtn.addActionListener(e -> {
                 modifyVehicle(vehicleIDFld.getText().trim(),vehiclesBox,brandFld,modelFld,
-                                                            colorFld,licenseFld,priceFld,statusBox,panel);
+                                                            colorFld,licenseFld,priceFld,panel);
             });
             
             back.addActionListener(e -> {
@@ -579,7 +595,7 @@ public class vehicleManagement extends JFrame {
     }
 
     private void modifyVehicle(String vehicleID, JComboBox <String> vehiclesBox, JTextField brandFld, JTextField modelFld,
-                                 JTextField colorFld, JTextField licenseFld, JTextField priceFld, JComboBox <String> statusBox, JPanel pnl){
+                                 JTextField colorFld, JTextField licenseFld, JTextField priceFld, JPanel pnl){
         
         if (vehicleID == null || vehicleID.isEmpty()) {
             JOptionPane.showMessageDialog(pnl, "Vehicle ID is missing.");
@@ -592,7 +608,6 @@ public class vehicleManagement extends JFrame {
         String color = colorFld.getText().trim();
         String license = licenseFld.getText().trim();
         String priceText = priceFld.getText().replace("₱", "").trim();
-        String status = statusBox.getSelectedItem().toString();
 
         if (brand.isEmpty() || model.isEmpty() || color.isEmpty() || license.isEmpty() || priceText.isEmpty()) {
             JOptionPane.showMessageDialog(pnl, "Please fill in all fields.");
@@ -601,7 +616,7 @@ public class vehicleManagement extends JFrame {
 
             try {
                 double price = Double.parseDouble(priceText);
-                updateVehicleDB(vehicleID, vType, brand, model, color, license, price, status, pnl);
+                updateVehicleDB(vehicleID, vType, brand, model, color, license, price, pnl);
             } 
                 catch (NumberFormatException no) {
                        JOptionPane.showMessageDialog(pnl, "Invalid rent price.");
@@ -609,9 +624,9 @@ public class vehicleManagement extends JFrame {
     }
     
     private void updateVehicleDB(String vehicleID, String vType, String brand, String model, String color,
-                                 String license, double rentPrice, String status, JPanel panel) {
+                                 String license, double rentPrice, JPanel panel) {
         connectToDB();
-        String query = "UPDATE VEHICLES SET VType = ?, Brand = ?, Model = ?, Color = ?, LicensePlate = ?, RentPrice = ?, VehicleStatus = ? WHERE VehicleID = ?";
+        String query = "UPDATE VEHICLES SET VType = ?, Brand = ?, Model = ?, Color = ?, LicensePlate = ?, RentPrice = ? WHERE VehicleID = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, vType);
@@ -620,7 +635,6 @@ public class vehicleManagement extends JFrame {
             stmt.setString(4, color);
             stmt.setString(5, license);
             stmt.setDouble(6, rentPrice);
-            stmt.setString(7, status);
             stmt.setString(8, vehicleID);
 
         int rows = stmt.executeUpdate();
@@ -643,12 +657,11 @@ public class vehicleManagement extends JFrame {
 
         for (Object[] row : data) {
             String id = row[0].toString().toLowerCase();
-            String vehicleType = row[1].toString();
-            String status = row[2].toString();
-
+            String vehicleType = row[2].toString();
+            String status = row[3].toString();
+        
         boolean match = id.contains(keyword) || vehicleType.toLowerCase().contains(keyword) || status.toLowerCase().contains(keyword);
         boolean matchType = vType.equals("All") || vehicleType.equalsIgnoreCase(vType);
-
         if (match && matchType) {
             vModel.addRow(row);
          }
