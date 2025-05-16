@@ -142,6 +142,13 @@ public class UserLandingPageUI extends JFrame {
         logOutBtn.setFont(F5);
         logOutBtn.setBackground(btnBGColor);
         logOutBtn.setBorder(Border);
+        
+        JButton settingsBtn = new JButton("Settings");
+        settingsBtn.setBounds(80, 555, 85, 30);
+        settingsBtn.setForeground(fontColor);
+        settingsBtn.setFont(F5);
+        settingsBtn.setBackground(btnBGColor);
+        settingsBtn.setBorder(Border);
 
         JPanel selection = new JPanel(new GridLayout(5,0,30,10));
         selection.setOpaque(false);
@@ -214,6 +221,7 @@ public class UserLandingPageUI extends JFrame {
         rentVehicleBtn.addActionListener(e -> goToRentVehicle());
         rentStatusBtn.addActionListener(e -> goToViewBookingStatus());
         returnVehicleBtn.addActionListener(e -> goToReturnVehicle());
+        settingsBtn.addActionListener(e -> goToSettings());
         logOutBtn.addActionListener(e -> logOut());
         
         pan.add(menuLabel);
@@ -225,6 +233,7 @@ public class UserLandingPageUI extends JFrame {
         pan.add(l3);
         pan.add(ls3);        
         pan.add(selection);
+        pan.add(settingsBtn);
         pan.add(logOutBtn);
         pan.add(line1);
         pan.add(line2);
@@ -247,6 +256,10 @@ public class UserLandingPageUI extends JFrame {
     private void goToViewBookingStatus(){
         dispose();
         new ViewBookingStatus(accID);
+    }
+    private void goToSettings(){
+        dispose();
+        new Settings(accID);
     }
     private void logOut(){
         int ans = JOptionPane.showConfirmDialog(null, "Are you sure you want to logout?",null,JOptionPane.YES_NO_OPTION);
