@@ -26,10 +26,12 @@ The Vehicle Rental Management System is a Java-based application that is designe
 - Git for Version Control
 
 ## Installation and Setup Instructions
-- Install Java JDK 23 here https://www.oracle.com/java/technologies/javase/jdk23-archive-downloads.html
-- Install Microsoft SQL Server Express here https://www.microsoft.com/en-us/sql-server/sql-server-downloads
-- Download LGoodDatePicker here https://github.com/LGoodDatePicker/LGoodDatePicker
-- Download SQL Server JDBC here https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16
+- Install the following (Refer to Acknowledgement & References for download link)
+    - Install Java JDK 23
+    - Install Microsoft SQL Server Express
+    - Download LGoodDatePicker 
+    - Download SQL Server JDBC 
+
 - Steps to Set Up the database:
     - Install SQL Server Express and create an account with SQL Server Authentication. 
     - In creating an account with SQL Server Authentication, set the username to admin and the password to admin456 or else, you might need to tamper the source code so you can put your own credentials there.
@@ -121,4 +123,11 @@ payment method.
 - Thorough improvement of returning the vehicle, we can add more precise return inspection to avoid not getting 
 compensated if the vehicle is returned damaged.
 
+## Acknowledgement and References
+- Java JDK 23 Download Link: https://www.oracle.com/java/technologies/javase/jdk23-archive-downloads.html
+- Microsoft SQL Express Download Link: https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+- JDBC Driver for SQL Server Download Link: https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver16
+- LGoodDatePicker Library Download Link: https://github.com/LGoodDatePicker/LGoodDatePicker
+- LGoodDatePicker Documentation https://javadoc.io/doc/com.github.lgooddatepicker/LGoodDatePicker
+- Difference between different SQL Databases https://www.w3schools.com/sql/sql_datatypes.asp
 
