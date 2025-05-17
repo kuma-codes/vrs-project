@@ -37,6 +37,53 @@ The Vehicle Rental Management System is a Java-based application that simplifies
     - First, open Netbeans and Create a new project.
     - After creating a project, download the src folder on the repository and copy all the contents there, such as package, java files and etc.
     - Right click on the project name you created and click clean.
+    - After cleaning, you can go to the runner package, and run the main.java file to run the system.
+
+# Database Configuration
+- Database Name
+    - vRentalSystemDB
+- Table Structures
+    - ACCOUNT
+        -AccountID varchar(10) primary key not null
+        -FName varchar(100) not null 
+        -LName varchar(100) not null
+        -DriverLicenseNo varchar(100) not null 
+        -Email varchar(100) not null unique
+        -PhoneNumber varchar(11)
+        -AccountPassword varchar(100) not null
+        -DateCreated date not null
+        -AccountRole varchar(100) not null
+        -AccountStatus varchar(100)
+    - VEHICLES
+        -VehicleID varchar(10) primary key not null 
+        -VType varchar(100) not null 
+        -Brand varchar(100) not null
+        -Model varchar(100)not null
+        -Color varchar(100)not null
+        -LicensePlate varchar(100) not null
+        -RentPrice decimal (10,2) not null 
+        -VehicleStatus varchar(100)
+    - RENTAL_DETAILS
+        -RentalID varchar(10) primary key not null
+        -AccountID varchar(10) not null
+        -VehicleID varchar(10) not null 
+        -PickupDate date not null 
+        -ReturnDate date not null
+        -BillingDate date 
+        -BillAmount decimal (10,2) 
+        -PaymentMethod varchar(100)
+        -RentalStatus varchar(100)
+        -constraint accFK foreign key(AccountID) references ACCOUNT(AccountID)
+        -constraint vehFK foreign key(VehicleID) references VEHICLES(VehicleID)
+    - MAINTENANCE
+        -MaintenanceID varchar(10) primary key not null 
+        -VehicleID varchar(10) not null 
+        -MaintenanceDate date not null
+        -MaintenanceStatus varchar(100)
+        -MDescription varchar(255)
+        -constraint mainFK foreign key(VehicleID) references VEHICLES(VehicleID)
+
+
 
 
 
