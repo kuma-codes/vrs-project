@@ -87,16 +87,16 @@ The Vehicle Rental Management System is a Java-based application that is designe
         - constraint mainFK foreign key(VehicleID) references VEHICLES(VehicleID)
 
 ## Usage Guide
-- Instructions on how to use the system
+### - Instructions on how to use the system
     - To use the system, you must first create an admin account. In order to do that, just insert an account in ACCOUNT table in the sql file, with an account role of Admin, after that, go back to the system and login as an admin, that way, you will have full control over the system features. In the Booking Management module, you can view and approve bookings, prepare vehicles, and access sales reports. In the Vehicle Management module, you can add, edit, or remove vehicles and schedule their maintenance. Under User Management, you can view all users and remove accounts if necessary.
 
     - For users, you must first create an account before logging into the system. After logging in, you will be directed to the landing page where you can access the main features. Show Vehicle Available allows you to see which vehicles are currently available for rent. Rent a Vehicle lets you choose and book a vehicle you want to rent. Return Vehicle is used to return a vehicle you have previously rented. Show Booking Status lets you view the status and history of your bookings.
 
 ## Know Issues & Future Improvements
-- Any known bugs or limitations
+### - Any known bugs or limitations
     - No Mobile App Version. The system does not yet have a standalone mobile app. Although it is still available from a mobile browser, neither the layout nor the functionality is optimized for use on smartphones or tablets, which could negatively impact overall user experience on smaller screens.
 
-- Possible future enchancements
+### - Possible future enchancements
     - Mobile App Support.A mobile application of the system will enable users to use features in a more accessible manner with the use of smartphones or tablets. This will enhance user experience by making booking, vehicle return, and status checking easier while on the move.
     - User Ratings and Reviews. This will enable users to provide feedback by rating their rental experience as well as the condition of the vehicles. It improves service quality and gives valuable information to future renters and admins.
     - Admin Role. Access control will enable varying levels of admin users, including Super Admin, Booking Manager, and Vehicle Manager. Every role will have assigned privileges, assisting in arranging duties and enhancing system security
