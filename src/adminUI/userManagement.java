@@ -14,14 +14,32 @@ import java.awt.Font;
 import java.awt.Color;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
 public class userManagement extends JFrame {
 
     private static final Font fontA = new Font("Arial", Font.BOLD, 18);
     private static final Font fontB = new Font("Arial", Font.BOLD, 14);
     private static final Color lblue = new Color(135, 206, 235);
-    private static final Color dblue = new Color(100, 149, 237);
+    private static final Color dblue = new Color(132, 168, 230);
+    private static final Color fontColor = Color.WHITE;
+    private static final Color shadowColor = new Color(143,143,143);
+    private static final Color btnBGColor = new Color(92,142,175);
+    private static final Color fldBGColor = new Color(240, 240, 240);
+    
+    private static final Border outer = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+    private static final Border inner = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+    private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,2);
+    private static final Border empBorder = BorderFactory.createEmptyBorder(2,2,2,2);
+    private static final Border lineBorder1 = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border btnBorder = BorderFactory.createCompoundBorder(outer,inner);
+    private static final Border btnBorder1 = new CompoundBorder(lineBorder1,outer);
+    private static final Border Border = new CompoundBorder(lineBorder,empBorder);
+    private static final Border fldBorder = new CompoundBorder(lineBorder1,empBorder);
 
     private JPanel mainPnl;
     private JPanel viewUsersPnl, addUserPnl, removeUserPnl;
@@ -60,23 +78,38 @@ public class userManagement extends JFrame {
         line2.setBounds(150, 0, 30, 640);
 
         JLabel title = new JLabel("USER MANAGEMENT", SwingConstants.CENTER);
-        title.setForeground(new Color (39, 58, 87));
+        title.setForeground(fontColor);
         title.setFont(new Font ("Arial", Font.BOLD, 40));
-        title.setBounds(0, 60, 900, 30);
+        title.setBounds(0, 60, 900, 45);
+        
+        JLabel titleLS = new JLabel("USER MANAGEMENT", SwingConstants.CENTER);
+        titleLS.setForeground(shadowColor);
+        titleLS.setFont(new Font ("Arial", Font.BOLD, 40));
+        titleLS.setBounds(3, 63, 900, 45);
 
         JButton viewUsers = new JButton("View Users");
         viewUsers.setBounds(80, 170, 740, 70);
-        viewUsers.setFont(new Font("Arial", Font.BOLD, 20));
+        viewUsers.setFont(new Font("Arial", Font.BOLD, 21));
+        viewUsers.setForeground(fontColor);
+        viewUsers.setBackground(btnBGColor);
+        viewUsers.setBorder(btnBorder);
 
         JButton remove = new JButton("Remove User");
         remove.setBounds(80, 260, 740, 70);
-        remove.setFont(new Font("Arial", Font.BOLD, 20));
+        remove.setFont(new Font("Arial", Font.BOLD, 21));
+        remove.setForeground(fontColor);
+        remove.setBackground(btnBGColor);
+        remove.setBorder(btnBorder);
 
         JButton back = new JButton("Back");
         back.setBounds(80, 350, 740, 70);
-         back.setFont(new Font("Arial", Font.BOLD, 20));
+        back.setFont(new Font("Arial", Font.BOLD, 21));
+        back.setForeground(fontColor);
+        back.setBackground(btnBGColor);
+        back.setBorder(btnBorder);
 
         mainPnl.add(title);
+        mainPnl.add(titleLS);
         mainPnl.add(viewUsers);
         mainPnl.add(remove);
         mainPnl.add(back);
@@ -120,10 +153,16 @@ public class userManagement extends JFrame {
         panel.setLayout(null);
 
         JLabel titlelbl = new JLabel(title.toUpperCase(), SwingConstants.CENTER);
-        titlelbl.setForeground(new Color (39, 58, 87));
+        titlelbl.setForeground(fontColor);
         titlelbl.setFont(new Font ("Arial", Font.BOLD, 40));
-        titlelbl.setBounds(0, 60, 900, 30);
+        titlelbl.setBounds(0, 60, 890, 30);
         panel.add(titlelbl);
+        
+        JLabel titlels = new JLabel(title.toUpperCase(), SwingConstants.CENTER);
+        titlels.setForeground(shadowColor);
+        titlels.setFont(new Font ("Arial", Font.BOLD, 40));
+        titlels.setBounds(3, 63, 890, 30);
+        panel.add(titlels);
 
         JPanel line1 = new JPanel();
         line1.setBackground(dblue);
@@ -135,28 +174,54 @@ public class userManagement extends JFrame {
 
         // View Users Panel
         if (title.equals("View Users")) {
+            
             JLabel search = new JLabel("Search:");
             search.setBounds(70, 140, 60, 25);
+            search.setForeground(fontColor);
+            search.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(search);
+            
+            JLabel searchLS = new JLabel("Search:");
+            searchLS.setBounds(72, 142, 60, 25);
+            searchLS.setForeground(shadowColor);
+            searchLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(searchLS);
 
             JTextField searchFld = new JTextField();
-            searchFld.setBounds(130, 140, 200, 25);
+            searchFld.setBounds(135, 140, 200, 25);
+            searchFld.setBackground(fldBGColor);
+            searchFld.setBorder(fldBorder);
             panel.add(searchFld);
 
             JLabel role = new JLabel("Role:");
-            role.setBounds(350, 140, 40, 25);
+            role.setBounds(355, 140, 40, 25);
+            role.setForeground(fontColor);
+            role.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(role);
+            
+            JLabel roleLS = new JLabel("Role:");
+            roleLS.setBounds(357, 142, 40, 25);
+            roleLS.setForeground(shadowColor);
+            roleLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(roleLS);
 
             JComboBox <String> roleBox = new JComboBox<>(new String[]{"All", "Admin", "User"});
-            roleBox.setBounds(390, 140, 150, 25);
+            roleBox.setBounds(405, 140, 150, 25);
+            roleBox.setBackground(fldBGColor);
             panel.add(roleBox);
 
             JButton searchBtn = new JButton("Search");
-            searchBtn.setBounds(550, 140, 100, 25);
+            searchBtn.setBounds(610, 140, 100, 25);
+            searchBtn.setForeground(fontColor);
+            searchBtn.setBackground(btnBGColor);
+            searchBtn.setBorder(btnBorder1);
             panel.add(searchBtn);
 
             JButton resetBtn = new JButton("Reset");
-            resetBtn.setBounds(660, 140, 100, 25);
+            resetBtn.setBounds(720, 140, 100, 25);
+            resetBtn.setForeground(fontColor);
+            resetBtn.setBackground(btnBGColor);
+            resetBtn.setBorder(btnBorder1);
             panel.add(resetBtn);
 
             String[] attributes = {"AccountID", "FirstName", "Surname", "DriverLicenseNo", "Email", "DateCreated", "Role", "Status"};
@@ -169,10 +234,15 @@ public class userManagement extends JFrame {
 
             JScrollPane scroll = new JScrollPane(userTab);
             scroll.setBounds(70, 190, 750, 300);
+            scroll.setBackground(fldBGColor);
+            scroll.setBorder(Border);
             panel.add(scroll);
             
             JButton back = new JButton("BACK");
-            back.setBounds(730, 520, 100, 40);
+            back.setBounds(720, 520, 100, 40);
+            back.setForeground(fontColor);
+            back.setBackground(btnBGColor);
+            back.setBorder(btnBorder1);
             panel.add(back);
 
             viewUserFltr(table, " ", "All");
@@ -208,26 +278,51 @@ public class userManagement extends JFrame {
 
             JLabel search = new JLabel("Search:");
             search.setBounds(70, 140, 60, 25);
+            search.setForeground(fontColor);
+            search.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(search);
+            
+            JLabel searchLS = new JLabel("Search:");
+            searchLS.setBounds(72, 142, 60, 25);
+            searchLS.setForeground(shadowColor);
+            searchLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(searchLS);
 
             JTextField searchFld = new JTextField();
-            searchFld.setBounds(130, 140, 200, 25);
+            searchFld.setBounds(135, 140, 200, 25);
+            searchFld.setBackground(fldBGColor);
+            searchFld.setBorder(fldBorder);
             panel.add(searchFld);
 
             JLabel role = new JLabel("Role:");
-            role.setBounds(350, 140, 40, 25);
+            role.setBounds(355, 140, 40, 25);
+            role.setForeground(fontColor);
+            role.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(role);
+            
+            JLabel roleLS = new JLabel("Role:");
+            roleLS.setBounds(357, 142, 40, 25);
+            roleLS.setForeground(shadowColor);
+            roleLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(roleLS);
 
             JComboBox <String> roleBox = new JComboBox<>(new String[]{"All", "Admin", "User"});
-            roleBox.setBounds(390, 140, 150, 25);
+            roleBox.setBounds(405, 140, 150, 25);
+            roleBox.setBackground(fldBGColor);
             panel.add(roleBox);
 
             JButton searchBtn = new JButton("Search");
-            searchBtn.setBounds(550, 140, 100, 25);
+            searchBtn.setBounds(595, 140, 100, 25);
+            searchBtn.setForeground(fontColor);
+            searchBtn.setBackground(btnBGColor);
+            searchBtn.setBorder(btnBorder1);
             panel.add(searchBtn);
 
             JButton resetBtn = new JButton("Reset");
-            resetBtn.setBounds(660, 140, 100, 25);
+            resetBtn.setBounds(705, 140, 100, 25);
+            resetBtn.setForeground(fontColor);
+            resetBtn.setBackground(btnBGColor);
+            resetBtn.setBorder(btnBorder1);
             panel.add(resetBtn);
 
             String[] attributes = {"AccountID", "FirstName", "Surname", "DriverLicenseNo", "Email", "DateCreated", "Role", "Status"};
@@ -239,23 +334,41 @@ public class userManagement extends JFrame {
             userTab.setEnabled(false);
 
             JScrollPane scroll = new JScrollPane(userTab);
-            scroll.setBounds(70, 190, 720, 280);
+            scroll.setBounds(85, 190, 720, 280);
+            scroll.setBackground(fldBGColor);
+            scroll.setBorder(Border);
             panel.add(scroll);
             
             JLabel user = new JLabel("Enter User ID:");
             user.setBounds(70, 490, 200, 20);
+            user.setForeground(fontColor);
+            user.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(user);
+            
+            JLabel userLS = new JLabel("Enter User ID:");
+            userLS.setBounds(72, 492, 200, 20);
+            userLS.setForeground(shadowColor);
+            userLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(userLS);
 
             JTextField userFld = new JTextField();
-            userFld.setBounds(70, 510, 280, 30);
+            userFld.setBounds(70, 515, 280, 30);
+            userFld.setBackground(fldBGColor);
+            userFld.setBorder(fldBorder);
             panel.add(userFld);
 
             JButton removeUserBtn = new JButton("REMOVE");
-            removeUserBtn.setBounds(580, 530, 130, 40);
+            removeUserBtn.setBounds(565, 530, 130, 40);
+            removeUserBtn.setForeground(fontColor);
+            removeUserBtn.setBackground(btnBGColor);
+            removeUserBtn.setBorder(btnBorder1);
             panel.add(removeUserBtn);
 
             JButton back = new JButton("BACK");
-            back.setBounds(720, 530, 100, 40);
+            back.setBounds(705, 530, 100, 40);
+            back.setForeground(fontColor);
+            back.setBackground(btnBGColor);
+            back.setBorder(btnBorder1);
             panel.add(back);
 
             removeUserFltr(data, table, "", "All");
@@ -315,7 +428,7 @@ public class userManagement extends JFrame {
     
     private Object[][] fetchUserData() {
         ArrayList<Object[]> userData = new ArrayList<>();
-        String query = "SELECT AccountID, FName, LName, DriverLicenseNo, Email, DateCreated, AccountRole, AccountStatus FROM ACCOUNT";
+        String query = "SELECT AccountID, FName, LName, DriverLicenseNo, Email, DateCreated, AccountRole, AccountStatus,CAST(SUBSTRING(AccountID, 2, 10) AS INT) AS NumericID FROM ACCOUNT ORDER BY NumericID";
 
         try (Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query)) {

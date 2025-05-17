@@ -22,13 +22,15 @@ public class salesReport extends JFrame {
     // Colors
     private static final Color fontColor = Color.WHITE;
     private static final Color shadowColor = new Color(143,143,143);
-    private static final Color fldBGColor = new Color(240, 240, 240);
     private static final Color btnBGColor = new Color(92,142,175);
 
     // Borders
     private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,2);
     private static final Border empBorder = BorderFactory.createEmptyBorder(5,5,5,5);
     private static final Border border = new CompoundBorder(lineBorder,empBorder);
+    private static final Border lineBorder1 = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border bevelBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+    private static final Border btnBorder = new CompoundBorder(lineBorder1,bevelBorder);
 
     private Connection conn;
     private final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=vRentalSystemDB;encrypt=true;trustServerCertificate=true";
@@ -140,7 +142,7 @@ public class salesReport extends JFrame {
         
         JComboBox<String> category = new JComboBox<>(types);
         category.setBounds(155, 105, 200, 30);
-        category.setBackground(fldBGColor);
+        category.setBackground(Color.WHITE);
         category.setFont(F4);
 
         DefaultTableModel columns = new DefaultTableModel(new String[]{"Name", "Vehicle Type", "Billing Date", 
@@ -174,7 +176,7 @@ public class salesReport extends JFrame {
         generate.setBounds(320, 530, 240, 40);
         generate.setFont(new Font("Arial", Font.BOLD, 16));
         generate.setBackground(btnBGColor); 
-        generate.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        generate.setBorder(btnBorder);
         generate.setForeground(Color.WHITE);
         generate.setFocusPainted(false);
 
@@ -217,7 +219,7 @@ public class salesReport extends JFrame {
                 JOptionPane.showMessageDialog(this, "End date must be the same as or after the start date.\nPlease select a valid date range.",null,JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
+            
             String sql = "SELECT A.FName + ' ' + A.LName AS Name, V.VType, RD.BillingDate, RD.BillAmount, RD.PaymentMethod FROM RENTAL_DETAILS RD "
                          + "JOIN VEHICLES V ON RD.VehicleID = V.VehicleID JOIN ACCOUNT A ON RD.AccountID = A.AccountID "
                          + "WHERE RD.BillingDate BETWEEN ? AND ?";
@@ -252,12 +254,16 @@ public class salesReport extends JFrame {
                     totalRevenue += amount;
                     count++;
                 }
-
-
+                
                 revenue.setText("Total Revenue                :         ₱ " + String.format("%.2f", totalRevenue));
                 rentalCount.setText("Number of Rentals         :         " + count);
                 revenueLS.setText("Total Revenue                :         ₱ " + String.format("%.2f", totalRevenue));
                 rentalCountLS.setText("Number of Rentals         :         " + count);
+                
+                if(count == 0){
+                    JOptionPane.showMessageDialog(this, "No sales we're made between selected dates.");
+                    return;
+                }
             } 
                 catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage());
@@ -281,3 +287,4 @@ public class salesReport extends JFrame {
         new salesReport();
     }
 }
+

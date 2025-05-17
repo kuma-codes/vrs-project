@@ -14,12 +14,30 @@ import java.awt.Font;
 import java.awt.Color;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
 public class manageBookings extends JFrame {
 
-    private static final Color dblue = new Color(100, 149, 237);
-
+    private static final Color dblue = new Color(132, 168, 230);
+    private static final Color fontColor = Color.WHITE;
+    private static final Color shadowColor = new Color(143,143,143);
+    private static final Color btnBGColor = new Color(92,142,175);
+    private static final Color fldBGColor = new Color(240, 240, 240);
+    
+    private static final Border outer = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+    private static final Border inner = BorderFactory.createBevelBorder(BevelBorder.RAISED);
+    private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,2);
+    private static final Border empBorder = BorderFactory.createEmptyBorder(2,2,2,2);
+    private static final Border lineBorder1 = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border btnBorder = BorderFactory.createCompoundBorder(outer,inner);
+    private static final Border btnBorder1 = new CompoundBorder(lineBorder1,outer);
+    private static final Border Border = new CompoundBorder(lineBorder,empBorder);
+    private static final Border fldBorder = new CompoundBorder(lineBorder1,empBorder);
+    
     private JPanel mainPnl;
     private JPanel viewPnl, approvePnl, preparePnl;
     
@@ -53,31 +71,52 @@ public class manageBookings extends JFrame {
         line2.setBounds(150, 0, 30, 640);
 
         JLabel title = new JLabel("BOOKING MANAGEMENT", SwingConstants.CENTER);
-        title.setForeground(new Color (39, 58, 87));
+        title.setForeground(fontColor);
         title.setFont(new Font ("Arial", Font.BOLD, 40));
-        title.setBounds(0, 60, 900, 30);
+        title.setBounds(0, 40, 900, 45);
+        
+        JLabel titleLS = new JLabel("BOOKING MANAGEMENT", SwingConstants.CENTER);
+        titleLS.setForeground(shadowColor);
+        titleLS.setFont(new Font ("Arial", Font.BOLD, 40));
+        titleLS.setBounds(3, 43, 900, 45);
 
         JButton viewBookings = new JButton("View Bookings");
-        viewBookings.setBounds(80, 140, 740, 70);
-        viewBookings.setFont(new Font("Arial", Font.BOLD, 20));
+        viewBookings.setBounds(80, 120, 740, 70);
+        viewBookings.setFont(new Font("Arial", Font.BOLD, 21));
+        viewBookings.setForeground(fontColor);
+        viewBookings.setBackground(btnBGColor);
+        viewBookings.setBorder(btnBorder);
 
         JButton approveBooking = new JButton("Approve Booking");
-        approveBooking.setBounds(80, 230, 740, 70);
-        approveBooking.setFont(new Font("Arial", Font.BOLD, 20));
+        approveBooking.setBounds(80, 205, 740, 70);
+        approveBooking.setFont(new Font("Arial", Font.BOLD, 21));
+        approveBooking.setForeground(fontColor);
+        approveBooking.setBackground(btnBGColor);
+        approveBooking.setBorder(btnBorder);
 
         JButton prepareVehicle = new JButton("Prepare Vehicle");
-        prepareVehicle.setBounds(80, 320, 740, 70);
-        prepareVehicle.setFont(new Font("Arial", Font.BOLD, 20));
+        prepareVehicle.setBounds(80, 290, 740, 70);
+        prepareVehicle.setFont(new Font("Arial", Font.BOLD, 21));
+        prepareVehicle.setForeground(fontColor);
+        prepareVehicle.setBackground(btnBGColor);
+        prepareVehicle.setBorder(btnBorder);
         
         JButton salesReport = new JButton("Sales Report");
-        salesReport.setBounds(80, 410, 740, 70);
-        salesReport.setFont(new Font("Arial", Font.BOLD, 20));
+        salesReport.setBounds(80, 375, 740, 70);
+        salesReport.setFont(new Font("Arial", Font.BOLD, 21));
+        salesReport.setForeground(fontColor);
+        salesReport.setBackground(btnBGColor);
+        salesReport.setBorder(btnBorder);
 
         JButton back = new JButton("Back");
-        back.setBounds(80, 500, 740, 70);
-        back.setFont(new Font("Arial", Font.BOLD, 20));
+        back.setBounds(80, 460, 740, 70);
+        back.setFont(new Font("Arial", Font.BOLD, 21));
+        back.setForeground(fontColor);
+        back.setBackground(btnBGColor);
+        back.setBorder(btnBorder);
 
         mainPnl.add(title);
+        mainPnl.add(titleLS);
         mainPnl.add(viewBookings);
         mainPnl.add(approveBooking);
         mainPnl.add(prepareVehicle);
@@ -129,10 +168,16 @@ public class manageBookings extends JFrame {
         panel.setLayout(null);
 
         JLabel titlelbl = new JLabel(title.toUpperCase(), SwingConstants.CENTER);
-        titlelbl.setForeground(new Color (39, 58, 87));
+        titlelbl.setForeground(fontColor);
         titlelbl.setFont(new Font ("Arial", Font.BOLD, 40));
-        titlelbl.setBounds(0, 60, 900, 30);
+        titlelbl.setBounds(0, 60, 890, 30);
         panel.add(titlelbl);
+        
+        JLabel titlels = new JLabel(title.toUpperCase(), SwingConstants.CENTER);
+        titlels.setForeground(shadowColor);
+        titlels.setFont(new Font ("Arial", Font.BOLD, 40));
+        titlels.setBounds(3, 63, 890, 30);
+        panel.add(titlels);
 
         JPanel line1 = new JPanel();
         line1.setBackground(dblue);
@@ -147,27 +192,52 @@ public class manageBookings extends JFrame {
 
             JLabel search = new JLabel("Search:");
             search.setBounds(70, 140, 60, 25);
+            search.setForeground(fontColor);
+            search.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(search);
             
+            JLabel searchLS = new JLabel("Search:");
+            searchLS.setBounds(72, 142, 60, 25);
+            searchLS.setForeground(shadowColor);
+            searchLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(searchLS);
+            
             JTextField searchFld = new JTextField();
-            searchFld.setBounds(130, 140, 200, 25);
+            searchFld.setBounds(135, 140, 200, 25);
+            searchFld.setBackground(fldBGColor);
+            searchFld.setBorder(fldBorder);
             panel.add(searchFld);
             
             JLabel status = new JLabel("Status:");
-            status.setBounds(350, 140, 50, 25);
+            status.setBounds(355, 140, 50, 25);
+            status.setForeground(fontColor);
+            status.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(status);
+            
+            JLabel statusLS = new JLabel("Status:");
+            statusLS.setBounds(357, 142, 50, 25);
+            statusLS.setForeground(shadowColor);
+            statusLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(statusLS);
 
-            JComboBox <String> statusBox = new JComboBox<>(new String[]{"All","Completed", "Not Yet Returned", "Pending Approval", "Cancelled"});
+            JComboBox <String> statusBox = new JComboBox<>(new String[]{"All","Completed", "Not Yet Returned", "Pending Approval", "Cancelled","Rejected"});
             statusBox.setBounds(410, 140, 150, 25);
+            statusBox.setBackground(fldBGColor);
             panel.add(statusBox);
 
             JButton searchBtn = new JButton("Search");
-            searchBtn.setBounds(570, 140, 100, 25);
+            searchBtn.setBounds(610, 140, 100, 25);
+            searchBtn.setForeground(fontColor);
+            searchBtn.setBackground(btnBGColor);
+            searchBtn.setBorder(btnBorder1);
             panel.add(searchBtn);
 
-            JButton reset = new JButton("Reset");
-            reset.setBounds(680, 140, 100, 25);
-            panel.add(reset);
+            JButton resetBtn = new JButton("Reset");
+            resetBtn.setBounds(720, 140, 100, 25);
+            resetBtn.setForeground(fontColor);
+            resetBtn.setBackground(btnBGColor);
+            resetBtn.setBorder(btnBorder1);
+            panel.add(resetBtn);
 
             String[] attributes = {"RentalID", "Account Details", "Vehicle Details", "ReturnDate", "RentalStatus"};
 
@@ -184,10 +254,15 @@ public class manageBookings extends JFrame {
 
             JScrollPane scroll = new JScrollPane(bookTab);
             scroll.setBounds(70, 190, 750, 300);
+            scroll.setBackground(fldBGColor);
+            scroll.setBorder(Border);
             panel.add(scroll);
 
             JButton back = new JButton("BACK");
-            back.setBounds(730, 520, 100, 40);
+            back.setBounds(720, 520, 100, 35);
+            back.setForeground(fontColor);
+            back.setBackground(btnBGColor);
+            back.setBorder(btnBorder1);
             panel.add(back);
             
             viewBookingFltr(data, table, "", "All");
@@ -198,7 +273,7 @@ public class manageBookings extends JFrame {
                 viewBookingFltr(data, table, keyword, statuses);
             });
 
-            reset.addActionListener(e -> {
+            resetBtn.addActionListener(e -> {
                 searchFld.setText(" ");
                 statusBox.setSelectedIndex(0);
                 viewBookingFltr(data, table, "", "All");
@@ -212,19 +287,35 @@ public class manageBookings extends JFrame {
         else if (title.equals("Approve Booking")) {
             
             JLabel search = new JLabel("Search:");
-            search.setBounds(70, 140, 60, 25);
+            search.setBounds(70, 130, 60, 25);
+            search.setForeground(fontColor);
+            search.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(search);
             
+            JLabel searchLS = new JLabel("Search:");
+            searchLS.setBounds(72, 132, 60, 25);
+            searchLS.setForeground(shadowColor);
+            searchLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(searchLS);
+            
             JTextField searchFld = new JTextField();
-            searchFld.setBounds(130, 140, 420, 25);
+            searchFld.setBounds(135, 130, 420, 25);
+            searchFld.setBackground(fldBGColor);
+            searchFld.setBorder(fldBorder);
             panel.add(searchFld);
 
             JButton searchBtn = new JButton("Search");
-            searchBtn.setBounds(570, 140, 100, 25);
+            searchBtn.setBounds(610, 130, 100, 25);
+            searchBtn.setForeground(fontColor);
+            searchBtn.setBackground(btnBGColor);
+            searchBtn.setBorder(btnBorder1);
             panel.add(searchBtn);
 
             JButton resetBtn = new JButton("Reset");
-            resetBtn.setBounds(680, 140, 100, 25);
+            resetBtn.setBounds(720, 130, 100, 25);
+            resetBtn.setForeground(fontColor);
+            resetBtn.setBackground(btnBGColor);
+            resetBtn.setBorder(btnBorder1);
             panel.add(resetBtn);
 
             String[] attributes = {"RentalID","AccountID", "VehicleID", "RentalStatus"};
@@ -238,26 +329,47 @@ public class manageBookings extends JFrame {
             
             JScrollPane scroll = new JScrollPane(pendingTab);
             scroll.setBounds(70, 170, 750, 300);
+            scroll.setBackground(fldBGColor);
+            scroll.setBorder(Border);
             panel.add(scroll);
 
             JLabel bookingID = new JLabel("Enter Rental ID:");
             bookingID.setBounds(70, 490, 200, 20);
+            bookingID.setForeground(fontColor);
+            bookingID.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(bookingID);
+            
+            JLabel bookingIDLS = new JLabel("Enter Rental ID:");
+            bookingIDLS.setBounds(72, 492, 200, 20);
+            bookingIDLS.setForeground(shadowColor);
+            bookingIDLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(bookingIDLS);
 
             JTextField bookingFld = new JTextField();
-            bookingFld.setBounds(70, 510, 280, 30);
+            bookingFld.setBounds(70, 515, 280, 30);
+            bookingFld.setBackground(fldBGColor);
+            bookingFld.setBorder(fldBorder);
             panel.add(bookingFld);
             
             JButton rejectBtn = new JButton("REJECT");
-            rejectBtn.setBounds(440, 530, 130, 40);
+            rejectBtn.setBounds(440, 510, 130, 35);
+            rejectBtn.setForeground(fontColor);
+            rejectBtn.setBackground(btnBGColor);
+            rejectBtn.setBorder(btnBorder1);
             panel.add(rejectBtn);
             
             JButton approveBtn = new JButton("APPROVE");
-            approveBtn.setBounds(580, 530, 130, 40);
+            approveBtn.setBounds(580, 510, 130, 35);
+            approveBtn.setForeground(fontColor);
+            approveBtn.setBackground(btnBGColor);
+            approveBtn.setBorder(btnBorder1);
             panel.add(approveBtn);
             
             JButton back = new JButton("BACK");
-            back.setBounds(720, 530, 100, 40);
+            back.setBounds(720, 510, 100, 35);
+            back.setForeground(fontColor);
+            back.setBackground(btnBGColor);
+            back.setBorder(btnBorder1);
             panel.add(back);
             
             adjustVehicleFltr(data, table, "", "All", 2);
@@ -297,30 +409,56 @@ public class manageBookings extends JFrame {
         else if (title.equals("Prepare Vehicle")) {
             
             JLabel search = new JLabel("Search:");
-            search.setBounds(70, 140, 60, 25);
+            search.setBounds(70, 130, 60, 25);
+            search.setForeground(fontColor);
+            search.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(search);
+            
+            JLabel searchLS = new JLabel("Search:");
+            searchLS.setBounds(72, 132, 60, 25);
+            searchLS.setForeground(shadowColor);
+            searchLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(searchLS);
 
             JTextField searchFld = new JTextField();
-            searchFld.setBounds(130, 140, 200, 25);
+            searchFld.setBounds(135, 130, 200, 25);
+            searchFld.setBackground(fldBGColor);
+            searchFld.setBorder(fldBorder);
             panel.add(searchFld);
 
             JLabel statusLbl = new JLabel("Type:");
-            statusLbl.setBounds(350, 140, 50, 25);
+            statusLbl.setBounds(355, 130, 40, 25);
+            statusLbl.setForeground(fontColor);
+            statusLbl.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(statusLbl);
+            
+            JLabel statusLS = new JLabel("Type:");
+            statusLS.setBounds(357, 132, 40, 25);
+            statusLS.setForeground(shadowColor);
+            statusLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(statusLS);
 
             JComboBox <String> typeCBox = new JComboBox<>(new String[]{"All"});
-            typeCBox.setBounds(410, 140, 150, 25);
+            typeCBox.setBounds(405, 130, 150, 25);
+            typeCBox.setBackground(fldBGColor);
             panel.add(typeCBox); 
             for (String type : fetchDistinctColumnValues("VType")) {
             typeCBox.addItem(type);
             }
 
+            
             JButton searchBtn = new JButton("Search");
-            searchBtn.setBounds(570, 140, 100, 25);
+            searchBtn.setBounds(595, 130, 100, 25);
+            searchBtn.setForeground(fontColor);
+            searchBtn.setBackground(btnBGColor);
+            searchBtn.setBorder(btnBorder1);
             panel.add(searchBtn);
 
             JButton resetBtn = new JButton("Reset");
-            resetBtn.setBounds(680, 140, 100, 25);
+            resetBtn.setBounds(705, 130, 100, 25);
+            resetBtn.setForeground(fontColor);
+            resetBtn.setBackground(btnBGColor);
+            resetBtn.setBorder(btnBorder1);
             panel.add(resetBtn);
 
             String[] attributes = {"VehicleID", "Vehicle Description", "VType",  "VehicleStatus"};
@@ -332,23 +470,41 @@ public class manageBookings extends JFrame {
             prepareTab.setEnabled(false);
 
             JScrollPane scroll = new JScrollPane(prepareTab);
-            scroll.setBounds(70, 190, 750, 300);
+            scroll.setBounds(70, 170, 750, 300);
+            scroll.setBackground(fldBGColor);
+            scroll.setBorder(Border);
             panel.add(scroll);
     
             JLabel bookingID = new JLabel("Enter Vehicle ID:");
             bookingID.setBounds(70, 490, 200, 20);
+            bookingID.setForeground(fontColor);
+            bookingID.setFont(new Font("Arial", Font.BOLD, 14));
             panel.add(bookingID);
+            
+            JLabel bookingIDLS = new JLabel("Enter Vehicle ID:");
+            bookingIDLS.setBounds(72, 492, 200, 20);
+            bookingIDLS.setForeground(shadowColor);
+            bookingIDLS.setFont(new Font("Arial", Font.BOLD, 14));
+            panel.add(bookingIDLS);
 
             JTextField bookingFld = new JTextField();
-            bookingFld.setBounds(70, 510, 300, 30);
+            bookingFld.setBounds(70, 515, 300, 30);
+            bookingFld.setBackground(fldBGColor);
+            bookingFld.setBorder(fldBorder);
             panel.add(bookingFld);
 
             JButton prepareBtn = new JButton("PREPARE");
-            prepareBtn.setBounds(590, 510, 120, 30);
+            prepareBtn.setBounds(580, 510, 120, 35);
+            prepareBtn.setForeground(fontColor);
+            prepareBtn.setBackground(btnBGColor);
+            prepareBtn.setBorder(btnBorder1);
             panel.add(prepareBtn);
             
             JButton back = new JButton("BACK");
-            back.setBounds(730, 510, 100, 30);
+            back.setBounds(720, 510, 100, 35);
+            back.setForeground(fontColor);
+            back.setBackground(btnBGColor);
+            back.setBorder(btnBorder1);
             panel.add(back);
 
             adjustVehicleFltr(data, table, " ", "All", 2);

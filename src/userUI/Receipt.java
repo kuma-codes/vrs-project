@@ -163,7 +163,7 @@ public class Receipt {
         JLabel DF = new JLabel("Damage fee:                                                                      ₱ "+String.valueOf(twodec.format(damageFee)));
         JLabel TF = new JLabel("Total fee:                                                                            ₱ "+String.valueOf(twodec.format(totalFee)));
         JLabel AP = new JLabel("Amount Paid:                                                                    ₱ "+String.valueOf(twodec.format(amountPaid)));
-        JLabel C = new JLabel("Change:       $"+String.valueOf(twodec.format(change)));
+        JLabel C = new JLabel("Change:       ₱"+String.valueOf(twodec.format(change)));
         
         CN.setForeground(Color.BLACK);
         CN.setFont(new Font("Arial", Font.BOLD, 13));
