@@ -83,6 +83,7 @@ The Vehicle Rental Management System is a Java-based application that simplifies
         - MDescription varchar(255)
         - constraint mainFK foreign key(VehicleID) references VEHICLES(VehicleID)
 
+## Usage Guide
 
 
 
