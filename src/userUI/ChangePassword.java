@@ -18,11 +18,14 @@ public class ChangePassword extends JFrame {
     private static final Color fontColor = Color.WHITE;
     private static final Color shadowColor = new Color(143,143,143);
     private static final Color btnBGColor = new Color(92,142,175);
+    private static final Color fldBGColor = new Color(240, 240, 240);
     
     //Border
     private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border empBorder = BorderFactory.createEmptyBorder(2,8,2,8);
     private static final Border bevelBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
-    private static final Border Border = new CompoundBorder(lineBorder,bevelBorder);
+    private static final Border Border1 = new CompoundBorder(lineBorder,bevelBorder);
+    private static final Border Border = new CompoundBorder(lineBorder,empBorder);
     
     // JDBC setup
     private Connection conn;
@@ -45,11 +48,11 @@ public class ChangePassword extends JFrame {
         pan.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(new Color(100, 149, 237)); 
+        line1.setBackground(new Color(132, 168, 230));
         line1.setBounds(90, 0, 30, 540);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(new Color(100, 149, 237));  
+        line2.setBackground(new Color(132, 168, 230));
         line2.setBounds(150, 0, 30, 540);
 
         //backBtn
@@ -64,7 +67,6 @@ public class ChangePassword extends JFrame {
         pan.add(backBtn);
 
         //backBtn shadow
-        
         JButton bBtnShadow = new JButton("<");
         bBtnShadow.setBounds(23, 24, 60, 40);
         bBtnShadow.setForeground(shadowColor);
@@ -76,56 +78,81 @@ public class ChangePassword extends JFrame {
         bBtnShadow.setFont(F1);        
         pan.add(bBtnShadow);        
 
-        
-        
         JLabel changePassLbl = new JLabel("Change Password",SwingConstants.CENTER);
         changePassLbl.setForeground(fontColor);
         changePassLbl.setFont(F1);
-        changePassLbl.setBounds(-10, 50, 900, 50);        
+        changePassLbl.setBounds(-10, 40, 900, 50);        
         pan.add(changePassLbl);
 
         JLabel changePassLblLS = new JLabel("Change Password",SwingConstants.CENTER);
         changePassLblLS.setForeground(shadowColor);
         changePassLblLS.setFont(F1);
-        changePassLblLS.setBounds(-7, 50, 900, 50);
+        changePassLblLS.setBounds(-7, 43, 900, 50);
         pan.add(changePassLblLS);
 
         JLabel oldPassLbl = new JLabel("Enter Old Password:");
-        oldPassLbl.setFont(new Font("Arial", Font.PLAIN, 18));
-        oldPassLbl.setBounds(200, 120, 200, 30);
+        oldPassLbl.setFont(new Font("Arial", Font.BOLD, 18));
+        oldPassLbl.setBounds(200, 100, 200, 30);
+        oldPassLbl.setForeground(fontColor);
         pan.add(oldPassLbl);
+        
+        JLabel oldPassLS = new JLabel("Enter Old Password:");
+        oldPassLS.setFont(new Font("Arial", Font.BOLD, 18));
+        oldPassLS.setBounds(202, 102, 200, 30);
+        oldPassLS.setForeground(shadowColor);
+        pan.add(oldPassLS);
 
         JPasswordField oldPassFld = new JPasswordField();
         oldPassFld.setFont(new Font("Arial", Font.PLAIN, 18));
-        oldPassFld.setBounds(200, 150, 500, 30);
+        oldPassFld.setBounds(200, 130, 500, 35);
+        oldPassFld.setBackground(fldBGColor);
+        oldPassFld.setBorder(Border);
         pan.add(oldPassFld);
 
         JLabel newPassLbl = new JLabel("Enter New Password:");
-        newPassLbl.setFont(new Font("Arial", Font.PLAIN, 18));
-        newPassLbl.setBounds(200, 190, 200, 30);
+        newPassLbl.setFont(new Font("Arial", Font.BOLD, 18));
+        newPassLbl.setBounds(200, 170, 200, 30);
+        newPassLbl.setForeground(fontColor);
         pan.add(newPassLbl);
+        
+        JLabel newPassLS = new JLabel("Enter New Password:");
+        newPassLS.setFont(new Font("Arial", Font.BOLD, 18));
+        newPassLS.setBounds(202, 172, 200, 30);
+        newPassLS.setForeground(shadowColor);
+        pan.add(newPassLS);
 
         JPasswordField newPassFld = new JPasswordField();
         newPassFld.setFont(new Font("Arial", Font.PLAIN, 18));
-        newPassFld.setBounds(200, 220, 500, 30);
+        newPassFld.setBounds(200, 200, 500, 35);
+        newPassFld.setBackground(fldBGColor);
+        newPassFld.setBorder(Border);
         pan.add(newPassFld);
 
         JLabel confPassLbl = new JLabel("Confirm Password:");
-        confPassLbl.setFont(new Font("Arial", Font.PLAIN, 18));
-        confPassLbl.setBounds(200, 260, 200, 30);
+        confPassLbl.setFont(new Font("Arial", Font.BOLD, 18));
+        confPassLbl.setBounds(200, 240, 200, 30);
+        confPassLbl.setForeground(fontColor);
         pan.add(confPassLbl);
+        
+        JLabel confPassLS = new JLabel("Confirm Password:");
+        confPassLS.setFont(new Font("Arial", Font.BOLD, 18));
+        confPassLS.setBounds(202, 242, 200, 30);
+        confPassLS.setForeground(shadowColor);
+        pan.add(confPassLS);
         
         JPasswordField confPassFld = new JPasswordField();
         confPassFld.setFont(new Font("Arial", Font.PLAIN, 18));
-        confPassFld.setBounds(200, 290, 500, 30);
+        confPassFld.setBounds(200, 270, 500, 35);
+        confPassFld.setBackground(fldBGColor);
+        confPassFld.setBorder(Border);
         pan.add(confPassFld);
         
         JButton saveBtn = new JButton("Save Changes");
         saveBtn.setForeground(fontColor);
         saveBtn.setFont(F3);
         saveBtn.setBackground(btnBGColor);
-        saveBtn.setBorder(Border);
-        saveBtn.setBounds(370, 330, 150, 30);
+        saveBtn.setBorder(Border1);
+        saveBtn.setBounds(370, 330, 150, 35);
         pan.add(saveBtn);
         
         //ActionListeners
@@ -152,6 +179,11 @@ public class ChangePassword extends JFrame {
                     if(newPassFld.getPassword().length <8){
                         JOptionPane.showMessageDialog(this, "Passwords must contain 8 characters and above.","Information", JOptionPane.WARNING_MESSAGE);
                     return;
+                    }
+                    
+                    if(oldPassFld.getText().equals(newPassFld.getText())){
+                        JOptionPane.showMessageDialog(this, "Password should not be the same as your old password.","Information", JOptionPane.WARNING_MESSAGE);
+                    return; 
                     }
                     
                     char[] newPass = newPassFld.getPassword();

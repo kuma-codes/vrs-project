@@ -165,15 +165,10 @@ public class LogInUI extends JFrame {
 
                 ResultSet rs = p.executeQuery();
 
-                boolean found = false;
 
                 while (rs.next()) {
-                    String dbEmail = rs.getString("Email");
-                    String inputEmail = eField.getText().trim();
-
-                    // Perform case-sensitive check in Java
-                    if (dbEmail.equals(inputEmail)) {
-                        found = true;
+                    
+                    if (rs.getString("Email").equals(eField.getText().toLowerCase().trim())) {
                         if (!rs.getString("AccountPassword").equals(pField.getText())) {
                             JOptionPane.showMessageDialog(null, "Incorrect Password", "Warning", JOptionPane.WARNING_MESSAGE);
                         } else {
@@ -189,11 +184,11 @@ public class LogInUI extends JFrame {
                         }
                         break;
                     }
+                    else{
+                        JOptionPane.showMessageDialog(null, "Email not found.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
 
-                if (!found) {
-                    JOptionPane.showMessageDialog(null, "Email not found", "Warning", JOptionPane.WARNING_MESSAGE);
-                }
             } catch (SQLException e1) {
                 JOptionPane.showMessageDialog(null, e1.getMessage());
             }

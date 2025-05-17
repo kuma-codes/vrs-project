@@ -13,17 +13,18 @@ public class ChangeName extends JFrame {
     private static final Font F1 = new Font("Arial", Font.BOLD, 40);
     private static final Font F3 = new Font("Arial", Font.BOLD, 16);
 
-
-    
     //Colors
     private static final Color fontColor = Color.WHITE;
     private static final Color shadowColor = new Color(143,143,143);
     private static final Color btnBGColor = new Color(92,142,175);
+    private static final Color fldBGColor = new Color(240, 240, 240);
     
     //Border
     private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border empBorder = BorderFactory.createEmptyBorder(2,8,2,8);
     private static final Border bevelBorder = BorderFactory.createBevelBorder(BevelBorder.RAISED);
-    private static final Border Border = new CompoundBorder(lineBorder,bevelBorder);
+    private static final Border Border1 = new CompoundBorder(lineBorder,bevelBorder);
+    private static final Border Border = new CompoundBorder(lineBorder,empBorder);
     
     // JDBC setup
     private Connection conn;
@@ -46,13 +47,13 @@ public class ChangeName extends JFrame {
         pan.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(new Color(100, 149, 237)); 
+        line1.setBackground(new Color(132, 168, 230));
         line1.setBounds(90, 0, 30, 540);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(new Color(100, 149, 237));  
+        line2.setBackground(new Color(132, 168, 230));
         line2.setBounds(150, 0, 30, 540);
-
+        
         //backBtn
         JButton backBtn = new JButton("<");
         backBtn.setBounds(20, 20, 60, 40);
@@ -75,58 +76,83 @@ public class ChangeName extends JFrame {
         bBtnShadow.setOpaque(false);
         bBtnShadow.setBorderPainted(false);
         bBtnShadow.setFont(F1);        
-        pan.add(bBtnShadow);        
-
-        
+        pan.add(bBtnShadow);     
         
         JLabel changeNameLbl = new JLabel("Change Name",SwingConstants.CENTER);
         changeNameLbl.setForeground(fontColor);
         changeNameLbl.setFont(F1);
-        changeNameLbl.setBounds(-10, 50, 900, 50);        
+        changeNameLbl.setBounds(-10, 40, 900, 50);        
         pan.add(changeNameLbl);
 
         JLabel changeNameLblLS = new JLabel("Change Name",SwingConstants.CENTER);
         changeNameLblLS.setForeground(shadowColor);
         changeNameLblLS.setFont(F1);
-        changeNameLblLS.setBounds(-7, 50, 900, 50);
+        changeNameLblLS.setBounds(-7, 43, 900, 50);
         pan.add(changeNameLblLS);
 
         JLabel fNameLbl = new JLabel("First Name:");
-        fNameLbl.setFont(new Font("Arial", Font.PLAIN, 18));
-        fNameLbl.setBounds(200, 120, 200, 30);
+        fNameLbl.setFont(new Font("Arial", Font.BOLD, 18));
+        fNameLbl.setBounds(200, 100, 200, 30);
+        fNameLbl.setForeground(fontColor);
         pan.add(fNameLbl);
+        
+        JLabel fNameLS = new JLabel("First Name:");
+        fNameLS.setFont(new Font("Arial", Font.BOLD, 18));
+        fNameLS.setBounds(202, 102, 200, 30);
+        fNameLS.setForeground(shadowColor);
+        pan.add(fNameLS);
 
         JTextField fNameFld = new JTextField();
         fNameFld.setFont(new Font("Arial", Font.PLAIN, 18));
-        fNameFld.setBounds(200, 150, 500, 30);
+        fNameFld.setBounds(200, 130, 500, 35);
+        fNameFld.setBackground(fldBGColor);
+        fNameFld.setBorder(Border);
         pan.add(fNameFld);
 
         JLabel lNameLbl = new JLabel("Last Name:");
-        lNameLbl.setFont(new Font("Arial", Font.PLAIN, 18));
-        lNameLbl.setBounds(200, 190, 200, 30);
+        lNameLbl.setFont(new Font("Arial", Font.BOLD, 18));
+        lNameLbl.setBounds(200, 170, 200, 30);
+        lNameLbl.setForeground(fontColor);
         pan.add(lNameLbl);
+        
+        JLabel lNameLS = new JLabel("Last Name:");
+        lNameLS.setFont(new Font("Arial", Font.BOLD, 18));
+        lNameLS.setBounds(202, 172, 200, 30);
+        lNameLS.setForeground(shadowColor);
+        pan.add(lNameLS);
 
         JTextField lNameFld = new JTextField();
         lNameFld.setFont(new Font("Arial", Font.PLAIN, 18));
-        lNameFld.setBounds(200, 220, 500, 30);
+        lNameFld.setBounds(200, 200, 500, 35);
+        lNameFld.setBackground(fldBGColor);
+        lNameFld.setBorder(Border);
         pan.add(lNameFld);
 
         JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        passwordLabel.setBounds(200, 260, 200, 30);
+        passwordLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        passwordLabel.setBounds(200, 240, 200, 30);
+        passwordLabel.setForeground(fontColor);
         pan.add(passwordLabel);
+        
+        JLabel passwordLS = new JLabel("Password:");
+        passwordLS.setFont(new Font("Arial", Font.BOLD, 18));
+        passwordLS.setBounds(202, 242, 200, 30);
+        passwordLS.setForeground(shadowColor);
+        pan.add(passwordLS);
         
         JPasswordField passwordField = new JPasswordField();
         passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
-        passwordField.setBounds(200, 290, 500, 30);
+        passwordField.setBounds(200, 270, 500, 35);
+        passwordField.setBackground(fldBGColor);
+        passwordField.setBorder(Border);
         pan.add(passwordField);
         
         JButton saveBtn = new JButton("Save Changes");
         saveBtn.setForeground(fontColor);
         saveBtn.setFont(F3);
         saveBtn.setBackground(btnBGColor);
-        saveBtn.setBorder(Border);
-        saveBtn.setBounds(370, 330, 150, 30);
+        saveBtn.setBorder(Border1);
+        saveBtn.setBounds(370, 330, 150, 35);
         pan.add(saveBtn);
         
         //ActionListeners

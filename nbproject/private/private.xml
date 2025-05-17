@@ -5,9 +5,10 @@
         <group>
             <file>file:/D:/EventDriven/eventDrivenProject/src/userUI/Settings.java</file>
             <file>file:/D:/EventDriven/eventDrivenProject/src/userUI/ChangeEmail.java</file>
+            <file>file:/D:/EventDriven/eventDrivenProject/src/logInUI/RegisterUI.java</file>
             <file>file:/D:/EventDriven/eventDrivenProject/src/userUI/Booking.java</file>
+            <file>file:/D:/EventDriven/eventDrivenProject/src/logInUI/LogInUI.java</file>
             <file>file:/D:/EventDriven/eventDrivenProject/src/userUI/ChangePassword.java</file>
-            <file>file:/D:/EventDriven/eventDrivenProject/src/userUI/ChangeName.java</file>
         </group>
     </open-files>
 </project-private>

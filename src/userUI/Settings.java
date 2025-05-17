@@ -12,10 +12,9 @@ public class Settings extends JFrame {
     //fonts and colors used that has rgb values
     private static final Font F1 = new Font("Arial", Font.BOLD, 40);
     private static final Font F2 = new Font("Arial", Font.BOLD, 20);
-    private static final Font F3 = new Font("Arial", Font.BOLD, 16);
+    private static final Font F3 = new Font("Arial", Font.BOLD, 41);
     private static final Font F4 = new Font("Arial", Font.BOLD, 16);
     private static final Font F5 = new Font("Arial", Font.BOLD, 13); 
-
     
     //Colors
     private static final Color fontColor = Color.WHITE;
@@ -39,17 +38,16 @@ public class Settings extends JFrame {
 
         JPanel pan = new JPanel();
         pan.setBackground(new Color(196, 227, 244));
-        pan.setBounds(0, 0, 900, 740);
+        pan.setBounds(0, 0, 900, 540);
         pan.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(new Color(100, 149, 237));
-        line1.setBounds(90, 0, 30, 740);
+        line1.setBackground(new Color(132, 168, 230));
+        line1.setBounds(90, 0, 30, 540);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(new Color(100, 149, 237));
-        line2.setBounds(150, 0, 30, 740);
-        
+        line2.setBackground(new Color(132, 168, 230));
+        line2.setBounds(150, 0, 30, 540);
         
         //backBtn
         JButton backBtn = new JButton("<");
@@ -74,13 +72,13 @@ public class Settings extends JFrame {
         
         JLabel settingsLabel = new JLabel("Settings",SwingConstants.CENTER);
         settingsLabel.setForeground(fontColor);
-        settingsLabel.setFont(F1);
-        settingsLabel.setBounds(-10, 80, 900, 50);
+        settingsLabel.setFont(F3);
+        settingsLabel.setBounds(-10, 60, 900, 50);
         
         JLabel settingsLS = new JLabel("Settings",SwingConstants.CENTER);
         settingsLS.setForeground(shadowColor);
-        settingsLS.setFont(F1);
-        settingsLS.setBounds(-7, 80, 900, 50);
+        settingsLS.setFont(F3);
+        settingsLS.setBounds(-7, 63, 900, 50);
         
         JButton ChangeName     = new JButton("Change Name");
         ChangeName.setForeground(fontColor);
@@ -97,11 +95,10 @@ public class Settings extends JFrame {
         ChangePassword.setFont(F2);
         ChangePassword.setBackground(btnBGColor);
         ChangePassword.setBorder(Border);
-
-
-        ChangeName.setBounds(80, 160, 700, 60);
-        ChangeEmail.setBounds(80, 240, 700, 60);
-        ChangePassword.setBounds(80, 320, 700, 60);
+        
+        ChangeName.setBounds(90, 160, 700, 60);
+        ChangeEmail.setBounds(90, 240, 700, 60);
+        ChangePassword.setBounds(90, 320, 700, 60);
 
         pan.add(ChangeName);
         pan.add(ChangeEmail);

@@ -295,7 +295,7 @@ public class RegisterUI extends JFrame {
                         p.setString(2,fField.getText().trim());
                         p.setString(3,lField.getText().trim());
                         p.setString(4,licenseField.getText().trim());
-                        p.setString(5,eField.getText().trim());
+                        p.setString(5,eField.getText().toLowerCase().trim());
                         p.setString(6,nField.getText().trim());
                         p.setString(7,pField.getText());
                         p.setDate(8,sqlDate);

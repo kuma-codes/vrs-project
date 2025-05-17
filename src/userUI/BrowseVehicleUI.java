@@ -17,14 +17,31 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
 public class BrowseVehicleUI extends JFrame {
     
     private static final Font F1 = new Font("Arial", Font.BOLD, 19);
-    private static final Font F2 = new Font("Arial", Font.BOLD, 16);
+    private static final Font F2 = new Font("Arial", Font.BOLD, 18);
     private static final Font F3 = new Font("Arial", Font.BOLD, 12);
+    private static final Font F4 = new Font("Arial", Font.BOLD, 14);
     private static final Color LBLUE = new Color(30,144,255);
     private static final Color DBLUE = new Color(71,112,139);
+    private static final Color white = Color.WHITE;
+    private static final Color shadowColor = new Color(143,143,143);
+    private static final Color btnBGColor = new Color(92,142,175);
+    private static final Color fldBGColor = new Color(240, 240, 240);
+    
+    //Border
+    private static final Border lineBorder = BorderFactory.createLineBorder(Color.GRAY,1);
+    private static final Border empBorder = BorderFactory.createEmptyBorder(2,2,2,2);
+    private static final Border Border = new CompoundBorder(lineBorder,empBorder);
+    private static final Border lineBorder2 = BorderFactory.createLineBorder(Color.LIGHT_GRAY,2);
+    private static final Border empBorder4 = BorderFactory.createEmptyBorder(2,2,2,2);
+    private static final Border Border1 = new CompoundBorder(lineBorder2,empBorder4);
 
     private DefaultListModel<String> listModel;
     private JList<String> itemList;
@@ -55,77 +72,120 @@ public class BrowseVehicleUI extends JFrame {
         pan.setLayout(null);
 
         JPanel line1 = new JPanel();
-        line1.setBackground(new Color(100, 149, 237)); 
+        line1.setBackground(new Color(132, 168, 230));
         line1.setBounds(90, 0, 30, 640);
 
         JPanel line2 = new JPanel();
-        line2.setBackground(new Color(100, 149, 237)); 
+        line2.setBackground(new Color(132, 168, 230));
         line2.setBounds(150, 0, 30, 640);
 
         JPanel browsePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        browsePanel.setBounds(40,40,800,520);
+        browsePanel.setBounds(40,25,800,520);
         browsePanel.setOpaque(false);
 
         JLabel sLabel = new JLabel("Search:");
-        sLabel.setPreferredSize(new Dimension(50,20));
-        sLabel.setFont(F3);
-        sLabel.setForeground(new Color (39, 58, 87));
+        sLabel.setPreferredSize(new Dimension(60,20));
+        sLabel.setFont(F4);
+        sLabel.setForeground(white);
+        
+        JLabel sLS = new JLabel("Search:");
+        sLS.setFont(F4);
+        sLS.setForeground(shadowColor);
+        sLS.setBounds(47,39,60,20);
+        
         searchField = new JTextField();
         searchField.setFont(F3);
-        searchField.setPreferredSize(new Dimension(195,25));
+        searchField.setPreferredSize(new Dimension(190,25));
+        searchField.setBorder(Border);
+        searchField.setBackground(fldBGColor);
 
         //Eto ung nagiinitialize ng connection sa database
         connectToDB();
         
-        JLabel tLabel = new JLabel("Type:");
+        JLabel tLabel = new JLabel("  Type:");
         tLabel.setPreferredSize(new Dimension(50,20));
-        tLabel.setFont(F3);
-        tLabel.setForeground(new Color (39, 58, 87));
+        tLabel.setFont(F4);
+        tLabel.setForeground(white);
+        
+        JLabel tLS = new JLabel("  Type:");
+        tLS.setFont(F4);
+        tLS.setForeground(shadowColor);
+        tLS.setBounds(317,39,50,20);
+        
         typeBox = new JComboBox<>();
         typeBox.addItem("All");
         for (String type : fetchDistinctColumnValues("VType")) {
             typeBox.addItem(type);
         }
         typeBox.setPreferredSize(new Dimension(195,25));
-        typeBox.setBackground(Color.WHITE);
+        typeBox.setBackground(fldBGColor);
 
-        JLabel cLabel = new JLabel("Color:");
+        JLabel cLabel = new JLabel("  Color:");
         cLabel.setPreferredSize(new Dimension(50,20));
-        cLabel.setFont(F3);
-        cLabel.setForeground(new Color (39, 58, 87));
+        cLabel.setFont(F4);
+        cLabel.setForeground(white);
+        
+        JLabel cLS = new JLabel("  Color:");
+        cLS.setFont(F4);
+        cLS.setForeground(shadowColor);
+        cLS.setBounds(582,39,50,20);
+        
         colorBox = new JComboBox<>();
         colorBox.addItem("All");
         for (String color : fetchDistinctColumnValues("Color")) {
         colorBox.addItem(color);
         }
         colorBox.setPreferredSize(new Dimension(195,25));
-        colorBox.setBackground(Color.WHITE);
+        colorBox.setBackground(fldBGColor);
 
         JButton searchBtn = new JButton("Search");
-        searchBtn.setPreferredSize(new Dimension(122,25));
-        searchBtn.setForeground(new Color (39, 58, 87));
+        searchBtn.setPreferredSize(new Dimension(122,23));
+        searchBtn.setForeground(white);
+        searchBtn.setBackground(btnBGColor);
+        searchBtn.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        
 
         JButton resetBtn = new JButton("Reset");
         resetBtn.setPreferredSize(new Dimension(122,25));
-        resetBtn.setForeground(new Color (39, 58, 87));
+        resetBtn.setForeground(white);
+        resetBtn.setBackground(btnBGColor);
+        resetBtn.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
         JLabel l1 = new JLabel("List of Available Vehicles: ");
         l1.setPreferredSize(new Dimension(500,30));
         l1.setFont(F2);
-        l1.setForeground(new Color (39, 58, 87));
+        l1.setForeground(white);
+        
+        JLabel l2 = new JLabel("List of Available Vehicles: ");
+        l2.setFont(F2);
+        l2.setForeground(shadowColor);
+        l2.setBounds(60,72,500,30);
 
         listModel = new DefaultListModel<>();
         itemList = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(itemList);
         scrollPane.setPreferredSize(new Dimension(700,300));
+        scrollPane.setBackground(fldBGColor);
+        scrollPane.setBorder(Border1);
 
-        JPanel btnGrp = new JPanel(new GridLayout(1,2,110,0));
+        JPanel btnGrp = new JPanel(new GridLayout(1,2,30,0));
+        btnGrp.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
         btnGrp.setOpaque(false);
         JButton backBtn = new JButton("Return");
+        backBtn.setFont(new Font("Arial",Font.BOLD,15));
+        backBtn.setBackground(btnBGColor);
+        backBtn.setForeground(white);
+        backBtn.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         JButton selectBtn = new JButton("Select");
+        selectBtn.setFont(new Font("Arial",Font.BOLD,15));
+        selectBtn.setBackground(btnBGColor);
+        selectBtn.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        selectBtn.setForeground(white);
         btnGrp.add(backBtn);
         btnGrp.add(selectBtn);
-        btnGrp.setPreferredSize(new Dimension(265,25));
+        btnGrp.setPreferredSize(new Dimension(300,40));
+        
+        
 
         browsePanel.add(sLabel);
         browsePanel.add(searchField);
@@ -162,6 +222,10 @@ public class BrowseVehicleUI extends JFrame {
         });
 
         pan.add(browsePanel);
+        pan.add(sLS);
+        pan.add(tLS);
+        pan.add(cLS);
+        pan.add(l2);
         pan.add(line1);
         pan.add(line2);
 
