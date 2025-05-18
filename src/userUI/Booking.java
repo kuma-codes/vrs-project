@@ -36,7 +36,7 @@ public class Booking
     public Booking(String AId) 
     {
         
-        JFrame frm = new JFrame("Vehicle Rental System");
+        JFrame frm = new JFrame("Rent a Vehicle");
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 640);
         frm.setLayout(null);
@@ -405,7 +405,4 @@ public class Booking
             e.printStackTrace();
             }
      }
-    public static void main(String[] args) {
-        new Booking("U1");
-    }
 }

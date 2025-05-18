@@ -59,7 +59,7 @@ public class BrowseVehicleUI extends JFrame {
 
     BrowseVehicleUI(String AId){
         this.accID = AId;
-        setTitle("Vehicle Rental System");
+        setTitle("Show Available Vehicle");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 530);
         setResizable(false);

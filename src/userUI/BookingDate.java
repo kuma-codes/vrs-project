@@ -28,7 +28,7 @@ public class BookingDate
     public BookingDate(String AId, String vID) 
     {
         NoPastDatesPolicy noPastDatesPolicy = new NoPastDatesPolicy();
-        frm = new JFrame("Booking Date");
+        frm = new JFrame("Rent a Vehicle");
         frm.setSize(900, 440);
         frm.setLayout(null);
         frm.setResizable(false);

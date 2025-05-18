@@ -308,7 +308,5 @@ public class Payment {
             e.printStackTrace();
             }
      }
-    public static void main(String[] args) {
-        
-    }
+
 }

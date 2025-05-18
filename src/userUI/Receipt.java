@@ -253,8 +253,5 @@ public class Receipt {
             e.printStackTrace();
             }
      }
-   public static void main(String[] args) {
-       new Receipt("","","",0.0,0.0,0.0,0.0,0.0,0.0);
-}
 
 }

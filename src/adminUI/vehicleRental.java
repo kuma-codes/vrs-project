@@ -28,7 +28,7 @@ public class vehicleRental extends JFrame {
 
     public vehicleRental() {
         
-        setTitle("vrs");
+        setTitle("Vejicle Rental System Admin");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 620);
         setResizable(false);
@@ -105,7 +105,4 @@ public class vehicleRental extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        new vehicleRental();
-    }
 }

@@ -38,7 +38,7 @@ public class BookingSummary{
         String name="", type="", model="", brand="", color="", licensePlate="";
         Double rentPrice=0.00, totalPrice=0.00;
         
-        JFrame frm = new JFrame("Vehicle Rental System");
+        JFrame frm = new JFrame("Booking Summary");
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 640);
         frm.setLayout(null);
@@ -340,7 +340,5 @@ public class BookingSummary{
             e.printStackTrace();
             }
      }
-     public static void main(String[] args) {
-         
-    }
+
 }

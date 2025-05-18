@@ -38,6 +38,7 @@ public class ChangeName extends JFrame {
         setTitle("Change Name");
         setSize(900, 440);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
 
@@ -227,6 +228,4 @@ public class ChangeName extends JFrame {
             e.printStackTrace();
             }
      }
-    public static void main(String[] args) {
-    }
 }

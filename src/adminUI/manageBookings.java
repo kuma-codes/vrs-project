@@ -823,7 +823,5 @@ public class manageBookings extends JFrame {
         repaint();
     }
 
-    public static void main(String[] args) {
-        new manageBookings();
-    }
+
 }

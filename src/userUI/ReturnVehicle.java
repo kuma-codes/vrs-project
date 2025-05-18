@@ -49,7 +49,7 @@ public class ReturnVehicle extends JFrame{
     
     public ReturnVehicle(String AId){
         
-        setTitle("Vehicle Rental System");
+        setTitle("Return Vehicle");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 640);
         setResizable(false);
@@ -410,7 +410,4 @@ public class ReturnVehicle extends JFrame{
             }
      }
     
-     public static void main(String[] args) {
-        new ReturnVehicle("U1");
-    }
 }

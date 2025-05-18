@@ -51,7 +51,7 @@ public class CardInfo {
     private static final String DB_PASS = "admin456";
     
     public CardInfo(String accID, String rentalID, String vehicleID,Double rentalFee,int otDays,Boolean isDamage,Double damageFee,Double otFee,Double totalFee, Double amountPaid, Double change) {
-        JFrame frm = new JFrame("Vehicle Rental System"); // frame
+        JFrame frm = new JFrame("Card Info"); // frame
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.setSize(900, 560);
         frm.setResizable(false);
@@ -287,7 +287,4 @@ public class CardInfo {
             e.printStackTrace();
             }
      }
-    
-     public static void main(String[] args) {
-    }
 }

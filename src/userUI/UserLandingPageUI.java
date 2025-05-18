@@ -288,9 +288,3 @@ public class UserLandingPageUI extends JFrame {
            }
     }
 }
-
-class runner{
-    public static void main(String[] args) {
-        new UserLandingPageUI("V0001");
-    }
-}

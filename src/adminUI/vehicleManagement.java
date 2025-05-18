@@ -1159,9 +1159,7 @@ public class vehicleManagement extends JFrame {
         repaint(); 
     }
 
-    public static void main(String[] args) {
-        new vehicleManagement();
-    }
+
 }
 
 class NoPastDatesPolicy implements DateVetoPolicy {
