@@ -165,10 +165,12 @@ public class LogInUI extends JFrame {
 
                 ResultSet rs = p.executeQuery();
 
-
+                boolean found = false;
+                
                 while (rs.next()) {
                     
                     if (rs.getString("Email").equals(eField.getText().toLowerCase().trim())) {
+                        found = true;
                         if (!rs.getString("AccountPassword").equals(pField.getText())) {
                             JOptionPane.showMessageDialog(null, "Incorrect Password", "Warning", JOptionPane.WARNING_MESSAGE);
                         } else {
@@ -184,11 +186,10 @@ public class LogInUI extends JFrame {
                         }
                         break;
                     }
-                    else{
+                }
+                    if(!found){
                         JOptionPane.showMessageDialog(null, "Email not found.", "Warning", JOptionPane.WARNING_MESSAGE);
                     }
-                }
-
             } catch (SQLException e1) {
                 JOptionPane.showMessageDialog(null, e1.getMessage());
             }

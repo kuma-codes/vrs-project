@@ -139,5 +139,5 @@ INSERT INTO RENTAL_DETAILS (RentalID, AccountID, VehicleID, PickupDate, ReturnDa
 ('R9', 'U14', 'V034', '2025-04-12', '2025-04-17', '2025-04-17', 4655.77, 'Card', 'Completed'),
 ('R10', 'U8', 'V038', '2025-04-27', '2025-05-01', '2025-05-02', 5394.55, 'Cash', 'Completed');
 
-select * from RENTAL_DETAILS
+select * from ACCOUNT
 
