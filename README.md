@@ -5,7 +5,8 @@
 The Vehicle Rental Management System is a Java-based application that is designed to simplify the daily operations of a vehicle rental business. Developed using Java and Swing for the graphical user interface (GUI) and Microsoft SQL Server for the database, this system enables admins to effectively manage vehicles, customers, reservations, and maintenance schedules through a user-friendly interface.
 
 ## Course Year & Section
-- BSIT 4A-G2
+- BSIT 2D - G2
+- SY 2024-2025
   
 ## Group Members
 - Moreno, Czar Serafin O.
